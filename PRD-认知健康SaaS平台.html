@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>认知健康SaaS平台 · 产品需求文档（PRD）</title>
+<style>
+@page{size:A4;margin:20mm 18mm 22mm 18mm}
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --navy:#1B3A5C;
+  --text:#1C2024;
+  --text2:#5B6C7E;
+  --border:#E6ECF2;
+  --font:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+
+body{
+  font-family:var(--font);color:var(--text);font-size:10.5pt;
+  line-height:1.8;max-width:210mm;margin:0 auto;padding:20mm 18mm;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+@media screen{body{background:#EFF3F8;margin-top:20px;box-shadow:0 4px 24px rgba(0,0,0,0.1)}}
+
+/* Cover */
+.cover{
+  text-align:center;padding:60px 0 40px;page-break-after:always;
+}
+.cover .label{
+  font-size:9pt;letter-spacing:4px;color:var(--navy);font-weight:700;margin-bottom:24px;
+}
+.cover h1{font-size:24pt;font-weight:800;color:var(--navy);letter-spacing:1px;margin-bottom:12px}
+.cover .sub{font-size:12pt;color:var(--text2);margin-bottom:40px}
+.cover table{margin:0 auto;text-align:left;font-size:9.5pt}
+.cover table td{padding:4px 14px;color:var(--text2)}
+.cover table td:first-child{font-weight:600;color:var(--text);text-align:right}
+
+h1{font-size:16pt;font-weight:800;color:var(--navy);margin:28px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--navy)}
+h2{font-size:12pt;font-weight:700;color:var(--navy);margin:22px 0 10px}
+h3{font-size:10.5pt;font-weight:700;color:var(--text);margin:14px 0 8px}
+p{color:var(--text2);margin-bottom:8px}
+strong{color:var(--text)}
+
+/* TOC */
+.toc{margin:16px 0}
+.toc a{color:var(--navy);text-decoration:none;font-size:10pt}
+.toc li{margin-bottom:4px;list-style:none}
+
+/* Tables */
+table.data{width:100%;border-collapse:collapse;margin:12px 0;font-size:9.5pt}
+table.data th{
+  background:#F0F4F8;padding:8px 12px;text-align:left;
+  font-weight:700;color:var(--navy);font-size:9pt;border:1px solid var(--border);
+}
+table.data td{
+  padding:8px 12px;border:1px solid var(--border);color:var(--text2);vertical-align:top;
+}
+table.data tr:nth-child(even) td{background:#FAFBFC}
+
+/* Version history */
+.version-table{margin:12px 0 24px}
+.version-table td{padding:4px 14px;font-size:9pt;color:var(--text2)}
+.version-table td:first-child{font-weight:600;color:var(--text)}
+
+/* Page break */
+.page-break{page-break-before:always}
+
+@media print{
+  body{box-shadow:none;margin:0}
+  .cover{page-break-after:always}
+}
+</style>
+</head>
+<body>
+
+<!-- ====== COVER ====== -->
+<div class="cover">
+<div class="label">产品需求文档</div>
+<h1>认知健康 SaaS 平台</h1>
+<p class="sub">面向体检中心与基层医疗机构的认知健康筛查与管理平台 · V1.0</p>
+<table>
+<tr><td>文档版本</td><td>V1.0</td></tr>
+<tr><td>创建日期</td><td>2026年3月</td></tr>
+<tr><td>文档状态</td><td>在校产品学习产出</td></tr>
+<tr><td>产品方向</td><td>B2B SaaS · 医疗健康</td></tr>
+</table>
+</div>
+
+<!-- ====== 版本记录 ====== -->
+<h1>版本记录</h1>
+<table class="data">
+<thead><tr><th>版本</th><th>日期</th><th>修改内容</th></tr></thead>
+<tbody>
+<tr><td>V1.0</td><td>2026-03</td><td>初始版本，定义核心功能范围与产品架构</td></tr>
+</tbody>
+</table>
+
+<!-- ====== TOC ====== -->
+<h1>目录</h1>
+<ol class="toc">
+<li><a href="#s1">产品概述</a></li>
+<li><a href="#s2">用户分析</a></li>
+<li><a href="#s3">产品架构</a></li>
+<li><a href="#s4">功能需求</a></li>
+<li><a href="#s5">非功能需求</a></li>
+<li><a href="#s6">数据与指标体系</a></li>
+</ol>
+
+<!-- ====== 1. 产品概述 ====== -->
+<h1 id="s1">1. 产品概述</h1>
+
+<h2>1.1 产品定位</h2>
+<p>认知健康SaaS平台是一款<strong>面向体检中心与基层医疗机构</strong>的B2B认知健康筛查与管理工具。平台以AD8量表为核心筛查工具，结合语音交互与AI健康咨询，帮助机构高效完成老年人群的认知功能初筛与风险分层管理。</p>
+
+<h2>1.2 目标用户</h2>
+<table class="data">
+<thead><tr><th>用户角色</th><th>核心诉求</th><th>使用场景</th></tr></thead>
+<tbody>
+<tr><td><strong>体检中心医生</strong></td><td>快速完成认知筛查，生成标准化报告</td><td>年度体检中的认知功能评估环节</td></tr>
+<tr><td><strong>社区医护人员</strong></td><td>对辖区老年人进行批量初筛与风险分层</td><td>社区健康管理、慢病随访</td></tr>
+<tr><td><strong>机构管理者</strong></td><td>查看筛查统计数据，导出报告，管理受测者</td><td>数据看板、机构汇报</td></tr>
+<tr><td><strong>老年受测者</strong></td><td>通过语音交互完成自测，获取健康建议</td><td>体检现场或居家自测</td></tr>
+</tbody>
+</table>
+
+<h2>1.3 核心价值</h2>
+<p><strong>对机构：</strong>标准化筛查流程 + 数字化管理 + 数据可视化，降低人工成本，提升筛查效率。</p>
+<p><strong>对受测者：</strong>语音交互降低使用门槛，即时获取风险分层与就医建议。</p>
+<p><strong>对行业：</strong>填补基层认知健康筛查的数字化缺口，助力"早筛查、早干预"。</p>
+
+<!-- ====== 2. 用户分析 ====== -->
+<h1 id="s2" class="page-break">2. 用户分析</h1>
+
+<h2>2.1 核心用户旅程</h2>
+<p><strong>筛查场景（受测者）：</strong>进入自测页面 → 开启语音播报 → 逐题作答（8题/1分钟） → 查看风险等级 → 获取专业建议 → 保存/打印报告。</p>
+<p><strong>管理场景（机构）：</strong>登录后台 → 查看今日筛查数据 → 按风险等级筛选受测者 → 导出报告/Excel → 跟踪高风险个案。</p>
+
+<h2>2.2 痛点分析</h2>
+<table class="data">
+<thead><tr><th>痛点</th><th>现状</th><th>产品方案</th></tr></thead>
+<tbody>
+<tr><td>筛查效率低</td><td>纸质问卷，人工计分，易出错</td><td>语音引导+自动计分+即时报告</td></tr>
+<tr><td>数据难管理</td><td>Excel或纸质存档，无法追溯趋势</td><td>结构化数据库+历史记录查询</td></tr>
+<tr><td>老年人使用门槛</td><td>文字阅读困难，操作复杂</td><td>语音播报+大字体+简化交互</td></tr>
+<tr><td>缺乏专业建议</td><td>只给分数，没有解读和下一步指引</td><td>四级风险分层+个性化建议</td></tr>
+</tbody>
+</table>
+
+<!-- ====== 3. 产品架构 ====== -->
+<h1 id="s3" class="page-break">3. 产品架构</h1>
+
+<h2>3.1 四层架构</h2>
+<table class="data">
+<thead><tr><th>层级</th><th>模块</th></tr></thead>
+<tbody>
+<tr><td><strong>应用层</strong></td><td>认知自测入口 · 语音答题 · AI健康咨询 · 个人报告 · 机构后台</td></tr>
+<tr><td><strong>服务层</strong></td><td>筛查引擎 · 风险评估模型 · MCI咨询智能体 · 认知训练 · 数据导出</td></tr>
+<tr><td><strong>数据层</strong></td><td>用户信息库 · 筛查结果库 · RAG知识库 · 账户体系 · 操作日志</td></tr>
+<tr><td><strong>基础设施</strong></td><td>云服务器 · CDN · TTS语音 · API网关 · 数据加密</td></tr>
+</tbody>
+</table>
+
+<h2>3.2 核心筛查工具：AD8量表</h2>
+<p>AD8（Ascertain Dementia 8）是国际通用的认知功能初筛工具，共8个"是/否"问题，评估记忆、执行功能、方向感等维度。约1分钟完成，适用于大规模初筛场景。</p>
+
+<!-- ====== 4. 功能需求 ====== -->
+<h1 id="s4" class="page-break">4. 功能需求</h1>
+
+<h2>4.1 V1.0 功能范围</h2>
+<table class="data">
+<thead><tr><th>优先级</th><th>功能模块</th><th>功能描述</th></tr></thead>
+<tbody>
+<tr><td><strong>P0</strong></td><td>AD8语音自测</td><td>8题语音引导答题，自动计分，即时出结果</td></tr>
+<tr><td><strong>P0</strong></td><td>四级风险分层</td><td>低风险/需关注/中高危/高风险，每级附带建议</td></tr>
+<tr><td><strong>P0</strong></td><td>个人筛查报告</td><td>分数+风险等级+专业建议+就医指引</td></tr>
+<tr><td><strong>P0</strong></td><td>机构数据看板</td><td>总筛查数、风险分布、年龄统计、趋势图</td></tr>
+<tr><td><strong>P1</strong></td><td>受测者管理</td><td>按姓名/风险/日期筛选，查看详情，导出Excel</td></tr>
+<tr><td><strong>P1</strong></td><td>AI健康咨询</td><td>MCI相关知识问答、生活方式干预建议</td></tr>
+<tr><td><strong>P2</strong></td><td>认知训练模块</td><td>记忆/注意力/执行功能针对性训练内容</td></tr>
+<tr><td><strong>P2</strong></td><td>报告导出/打印</td><td>生成PDF报告，支持打印</td></tr>
+</tbody>
+</table>
+
+<h2>4.2 详细功能描述</h2>
+
+<h3>4.2.1 AD8语音自测（P0）</h3>
+<p><strong>入口：</strong>机构提供二维码或链接，受测者扫码进入。</p>
+<p><strong>交互流程：</strong>语音播报题目 → 用户选择"是/否" → 自动进入下一题（可关闭自动连播） → 8题完成后展示结果。</p>
+<p><strong>语速设置：</strong>慢/正常/快三档，默认正常。</p>
+<p><strong>断点续答：</strong>中途退出自动保存进度，下次进入可继续。</p>
+
+<h3>4.2.2 四级风险分层（P0）</h3>
+<table class="data">
+<thead><tr><th>等级</th><th>AD8得分</th><th>判定</th><th>建议动作</th></tr></thead>
+<tbody>
+<tr><td>🟢 低风险</td><td>0-1</td><td>正常范围</td><td>每年常规复查</td></tr>
+<tr><td>🟡 需关注</td><td>2-3</td><td>早期变化迹象</td><td>3-6个月复查，开始生活方式干预</td></tr>
+<tr><td>🟠 中高危</td><td>4-5</td><td>可能存在认知损害</td><td>建议前往神经内科/记忆门诊评估</td></tr>
+<tr><td>🔴 高风险</td><td>6-8</td><td>高度提示认知障碍</td><td>尽快全面检查，家属加强照护</td></tr>
+</tbody>
+</table>
+
+<h3>4.2.3 AI健康咨询（P1）</h3>
+<p>基于大语言模型的MCI健康咨询智能体，覆盖知识问答、生活方式干预、情绪安抚三大场景。已建立21条评测用例的测试体系，完成从Prompt V1.0到V2.0的迭代优化。</p>
+
+<!-- ====== 5. 非功能需求 ====== -->
+<h1 id="s5" class="page-break">5. 非功能需求</h1>
+<table class="data">
+<thead><tr><th>维度</th><th>要求</th></tr></thead>
+<tbody>
+<tr><td><strong>性能</strong></td><td>自测页面加载 ≤ 2秒；语音播报延迟 ≤ 500ms</td></tr>
+<tr><td><strong>兼容性</strong></td><td>支持iOS 13+、Android 8+、主流微信版本内置浏览器</td></tr>
+<tr><td><strong>可用性</strong></td><td>字体≥16px，按钮≥44px触控区域，语音引导覆盖所有操作</td></tr>
+<tr><td><strong>安全性</strong></td><td>用户健康数据加密存储，传输层TLS，RBAC权限控制</td></tr>
+<tr><td><strong>合规</strong></td><td>筛查结果附带"不构成医疗诊断"声明；不存储未脱敏的个人身份信息</td></tr>
+</tbody>
+</table>
+
+<!-- ====== 6. 数据与指标 ====== -->
+<h1 id="s6">6. 数据与指标体系</h1>
+<table class="data">
+<thead><tr><th>指标类型</th><th>指标</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td>业务指标</td><td>筛查完成率、高风险检出率</td><td>评估筛查工具的有效性</td></tr>
+<tr><td>用户指标</td><td>日活机构数、人均筛查次数</td><td>衡量产品使用情况</td></tr>
+<tr><td>体验指标</td><td>答题完成率（8题全答完/开始答题）</td><td>衡量交互流程的流畅度</td></tr>
+<tr><td>AI指标</td><td>回答满意度、知识准确率</td><td>衡量AI咨询质量</td></tr>
+</tbody>
+</table>
+
+<p style="text-align:center;margin-top:40px;color:var(--text2);font-size:9pt">— 文档结束 —</p>
+
+</body>
+</html>

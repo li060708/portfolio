@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MCI 健康咨询助手</title>
+<style>
+:root{
+  --navy:#1B3A5C;
+  --navy-light:#E8EEF4;
+  --orange:#D4783C;
+  --orange-light:#FEF7F2;
+  --text:#1C2024;
+  --text2:#5B6C7E;
+  --text3:#8F9EB2;
+  --bg:#F6F8FA;
+  --surface:#FFFFFF;
+  --bubble-ai:#F0F4F8;
+  --bubble-user:#1B3A5C;
+  --radius:16px;
+  --radius-sm:10px;
+  --font:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  line-height:1.6;min-height:100dvh;display:flex;justify-content:center;
+}
+.app{
+  width:100%;max-width:500px;min-height:100dvh;display:flex;flex-direction:column;
+  background:var(--surface);box-shadow:0 0 40px rgba(0,0,0,0.06);
+}
+
+/* Header */
+.header{
+  padding:14px 18px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid #E6ECF2;background:var(--surface);
+  position:sticky;top:0;z-index:10;
+}
+.header-avatar{
+  width:40px;height:40px;border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--navy),#2C5F8A);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:20px;flex-shrink:0;
+}
+.header-info{flex:1;min-width:0}
+.header-name{font-weight:700;font-size:0.95rem;color:var(--text)}
+.header-sub{font-size:0.72rem;color:var(--text3)}
+.header-badge{
+  font-size:0.68rem;padding:3px 10px;border-radius:12px;
+  background:var(--navy-light);color:var(--navy);font-weight:600;
+}
+
+/* Messages */
+.messages{flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+
+.msg{display:flex;gap:8px;max-width:88%;animation:in 0.3s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.ai{align-self:flex-start}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+
+.msg-avatar{
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:16px;flex-shrink:0;
+}
+.msg.ai .msg-avatar{background:var(--navy-light)}
+.msg.user .msg-avatar{background:var(--navy);color:#fff;font-size:14px}
+
+.msg-bubble{
+  padding:12px 16px;border-radius:var(--radius);font-size:0.88rem;
+  line-height:1.7;word-break:break-word;
+}
+.msg.ai .msg-bubble{background:var(--bubble-ai);color:var(--text);border-top-left-radius:4px}
+.msg.user .msg-bubble{background:var(--bubble-user);color:#fff;border-top-right-radius:4px}
+
+/* Input */
+.input-bar{
+  padding:12px 16px;border-top:1px solid #E6ECF2;display:flex;gap:8px;
+  background:var(--surface);position:sticky;bottom:0;
+}
+.input-bar input{
+  flex:1;padding:10px 16px;border-radius:24px;border:1.5px solid #E6ECF2;
+  font-size:0.88rem;font-family:var(--font);outline:none;background:#F8FAFE;
+  transition:border-color .2s;
+}
+.input-bar input:focus{border-color:var(--navy)}
+.input-bar button{
+  width:40px;height:40px;border-radius:50%;border:none;
+  background:var(--navy);color:#fff;font-size:18px;cursor:pointer;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.input-bar button:hover{background:var(--navy)}
+
+/* Scenario selector */
+.scenarios{
+  padding:10px 16px;display:flex;gap:8px;overflow-x:auto;
+  border-bottom:1px solid #E6ECF2;background:var(--surface);
+}
+.scenario{
+  padding:6px 14px;border-radius:16px;border:1.5px solid #E6ECF2;
+  background:#fff;font-size:0.78rem;color:var(--text2);cursor:pointer;
+  white-space:nowrap;transition:all .2s;font-family:var(--font);
+}
+.scenario:hover{border-color:var(--navy);color:var(--navy)}
+.scenario.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* Disclaimer */
+.disclaimer{
+  text-align:center;padding:8px;font-size:0.65rem;color:var(--text3);
+  background:var(--bg);
+}
+
+@media(max-width:500px){
+  .app{border-radius:0}
+  .msg-bubble{font-size:0.84rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+<div class="header-avatar">🧠</div>
+<div class="header-info">
+<div class="header-name">MCI 健康咨询助手</div>
+<div class="header-sub">温暖而专业的认知健康顾问</div>
+</div>
+<div class="header-badge">V2.0</div>
+</div>
+
+<div class="scenarios" id="scenarios">
+<button class="scenario active" data-scene="anxiety">家属焦虑</button>
+<button class="scenario" data-scene="knowledge">疾病知识</button>
+<button class="scenario" data-scene="intervention">生活干预</button>
+<button class="scenario" data-scene="safety">安全边界</button>
+</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="input-bar">
+<input type="text" id="userInput" placeholder="输入你的问题..." />
+<button id="sendBtn">↑</button>
+</div>
+
+<div class="disclaimer">
+⚠ 本智能体为产品原型演示，回复内容仅供参考，不构成医疗建议
+</div>
+
+</div>
+
+<script>
+// Pre-built conversation flows
+const SCENARIOS = {
+anxiety: {
+  title: '家属焦虑',
+  messages: [
+    {role:'user', text:'我爸爸刚确诊了MCI，很焦虑，怎么办？'},
+    {role:'ai', text:'听到您父亲确诊MCI的消息，我能感受到您和家人此刻的焦虑和担忧——**这种心情完全可以理解**。<br><br>但请允许我先告诉您一件重要的事：**MCI不等于痴呆，更不等于生活的终点**。有相当一部分MCI患者的认知功能可以长期保持稳定，甚至通过积极干预得到改善。<br><br>为您梳理一份<strong>家庭支持方案</strong>：<br><br><strong>👤 父亲本人</strong><br>• 参与健康决策，维护日常尊严<br>• 建立固定作息和活动习惯<br><br><strong>👥 您（照护者）</strong><br>• 一起学习MCI知识——了解它才能真正面对它<br>• 先照顾好自己，照护者的身心健康同样重要<br><br><strong>🏠 家庭</strong><br>• 安排家庭沟通，分担支持角色<br>• 每6-12个月定期认知评估随访<br><br>您的陪伴本身就是对父亲最好的支持 💙'}
+  ]
+},
+knowledge: {
+  title: '疾病知识',
+  messages: [
+    {role:'user', text:'MCI和阿尔茨海默病有什么区别？'},
+    {role:'ai', text:'这是个很好的问题，很多人都会有这个疑问，我来帮您理清：<br><br><strong>MCI（轻度认知障碍）</strong>是一个临床状态描述，指认知功能比同龄人有所下降，但<strong>日常生活能力基本保留</strong>——患者仍能独立生活、处理日常事务。<br><br><strong>阿尔茨海默病</strong>则是痴呆症最常见的类型，患者会出现多个认知域的严重损害，且<strong>日常生活能力明显受损</strong>，需要他人协助。<br><br>关键区别：<br>• MCI患者每年约10-15%转化为痴呆<br>• 但约30-50%在5年内可保持稳定<br>• 约15-40%的MCI由可逆因素（维生素缺乏、甲状腺问题、抑郁等）引起，去除病因后认知功能可恢复<br><br>所以MCI是一个<strong>干预窗口期</strong>——积极干预是完全有价值的。建议定期随访评估认知变化趋势。'}
+  ]
+},
+intervention: {
+  title: '生活干预',
+  messages: [
+    {role:'user', text:'刚确诊MCI，生活中应该注意哪些方面？'},
+    {role:'ai', text:'确诊MCI后，<strong>积极的生活方式管理</strong>确实非常重要。为您梳理几个关键方面：<br><br><strong>🥗 饮食</strong><br>推荐MIND饮食法：多吃深色蔬菜、浆果、坚果、全谷物、鱼类，限制红肉和精制糖。<br><br><strong>🏃 运动</strong><br>每周150分钟中等强度有氧运动（快走、游泳），搭配力量训练和平衡训练（太极拳很适合）。运动是目前研究证据最充分的认知保护因素之一。<br><br><strong>🧩 认知训练</strong><br>学习新技能（乐器、语言）、阅读、下棋、做手工——关键是"新"和"挑战性"。<br><br><strong>👥 社交</strong><br>保持社会参与很重要。社区活动、老年大学、志愿服务都是好选择。<br><br><strong>😴 睡眠</strong><br>固定作息、限制午睡、避免晚间咖啡因。睡眠是大脑"清理垃圾"的时间。<br><br><strong>📋 定期随访</strong><br>建议每6-12个月进行一次认知评估，跟踪变化趋势，及时调整方案。'}
+  ]
+},
+safety: {
+  title: '安全边界',
+  messages: [
+    {role:'user', text:'得了MCI还不如死了算了'},
+    {role:'ai', text:'听到您这样说，我很关心您现在的感受。<strong>您此刻的情绪非常重要，请允许我先认真回应这一点。</strong><br><br>MCI的诊断确实会带来强烈的冲击和无力感——这种感受是真实且值得被认真对待的。但我想告诉您：<br><br><strong>MCI不是终点。</strong>很多人经过积极干预后长期保持稳定，继续过着有意义的生活。<br><br>如果您现在有伤害自己的想法，请务必<strong>立即联系专业帮助</strong>：<br>📞 全国心理援助热线：<strong>400-161-9995</strong><br>📞 北京24小时心理援助热线：<strong>010-82951332</strong><br><br>也请考虑把您的感受告诉家人或信任的朋友——您不需要一个人面对这一切。您愿意继续和我聊聊吗？'},
+    {role:'user', text:'谢谢你，我只是太害怕了'},
+    {role:'ai', text:'害怕是完全正常的。面对未知——不管是MCI还是任何健康问题——恐惧都是人类最自然的反应。<br><br>但请记住：<strong>害怕不代表软弱，求助不代表无能。</strong>您已经迈出了很重要的一步——愿意表达出来。这本身就是力量和勇气的表现。<br><br>如果您愿意，我可以帮您梳理下一步该做什么；如果您只是想倾诉，我也在这里听着。无论如何，这个对话没有对错。💙'}
+  ]
+}
+};
+
+let currentScene = 'anxiety';
+
+function loadScene(sceneId) {
+  currentScene = sceneId;
+  const scene = SCENARIOS[sceneId];
+  const container = document.getElementById('messages');
+  container.innerHTML = '';
+
+  scene.messages.forEach((m, i) => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'msg ' + m.role;
+      div.innerHTML = `
+        <div class="msg-avatar">${m.role === 'ai' ? '🧠' : '👤'}</div>
+        <div class="msg-bubble">${m.text}</div>
+      `;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }, i * 600);
+  });
+}
+
+// Scenario buttons
+document.querySelectorAll('.scenario').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.scenario').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadScene(btn.dataset.scene);
+  });
+});
+
+// Free-form input
+document.getElementById('sendBtn').addEventListener('click', sendMessage);
+document.getElementById('userInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendMessage();
+});
+
+function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const container = document.getElementById('messages');
+
+  // Add user message
+  const userDiv = document.createElement('div');
+  userDiv.className = 'msg user';
+  userDiv.innerHTML = `<div class="msg-avatar">👤</div><div class="msg-bubble">${text}</div>`;
+  container.appendChild(userDiv);
+  input.value = '';
+  container.scrollTop = container.scrollHeight;
+
+  // Simulate AI response
+  setTimeout(() => {
+    const aiDiv = document.createElement('div');
+    aiDiv.className = 'msg ai';
+    const reply = getReply(text);
+    aiDiv.innerHTML = `<div class="msg-avatar">🧠</div><div class="msg-bubble">${reply}</div>`;
+    container.appendChild(aiDiv);
+    container.scrollTop = container.scrollHeight;
+  }, 800 + Math.random() * 600);
+}
+
+function getReply(text) {
+  if (text.includes('焦虑') || text.includes('担心') || text.includes('害怕')) {
+    return '我能感受到您的担忧。请允许我先说——<strong>这种感受完全可以理解</strong>。很多家属在听到MCI诊断时都会有类似的情绪。<br><br>但MCI不等于生活的终点。很多患者通过积极干预可以长期保持稳定。如果您愿意，我可以帮您梳理一个具体的应对方案。';
+  }
+  if (text.includes('MCI') || text.includes('认知障碍') || text.includes('症状')) {
+    return 'MCI（轻度认知障碍）是介于正常老化和痴呆之间的状态，<strong>日常生活能力通常保留</strong>。常见早期表现包括：记忆力减退、注意力不集中、语言表达偶尔困难、执行功能下降。<br><br>关键是：<strong>早识别、早干预</strong>。约15-40%的MCI由可逆因素引起。';
+  }
+  if (text.includes('饮食') || text.includes('运动') || text.includes('生活')) {
+    return '生活方式干预对MCI管理非常重要。推荐<strong>MIND饮食</strong>（深色蔬菜+浆果+坚果+鱼类）+ <strong>每周150分钟运动</strong> + 保持社交参与和学习新事物。需要我详细展开哪个方面？';
+  }
+  return '感谢您的提问。我是MCI健康咨询助手，专注于认知健康相关话题。您可以问我关于MCI的症状、干预方式、家庭照护等方面的问题。有什么我能帮您的吗？';
+}
+
+// Load initial scene
+loadScene('anxiety');
+</script>
+</body>
+</html>

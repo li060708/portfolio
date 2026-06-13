@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>健脑小助手 — 老年认知健康评估教学智能体</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#FAF7F2; --surface:#FFF; --surface-alt:#F5F2EC;
+  --primary:#4A9E8E; --primary-light:#E8F4F1; --primary-dark:#3A7E70;
+  --accent:#E8A87C; --accent-light:#FDF0E6;
+  --text:#2C3E35; --text-med:#5A6B62; --text-light:#8A9A91;
+  --border:#E8E3DC; --border-light:#F0EDE8;
+  --risk-low:#7BC8A4; --risk-low-bg:#EDF8F2;
+  --risk-mid:#F0C87A; --risk-mid-bg:#FEF9EE;
+  --risk-high:#E8887A; --risk-high-bg:#FDF0EE;
+  --shadow-sm:0 1px 3px rgba(44,62,53,0.06);
+  --shadow-md:0 4px 16px rgba(44,62,53,0.08);
+  --radius-sm:10px; --radius:16px; --radius-lg:24px; --radius-full:999px;
+  --chat-user:#4A9E8E; --chat-ai:#F0EDE8;
+  --font-display:'Lora','Noto Serif SC',serif;
+  --font-body:'Noto Sans SC',-apple-system,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--text);
+  line-height:1.6;min-height:100dvh;overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+.app-container{max-width:520px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);position:relative}
+.app-header{
+  padding:16px 20px 12px;display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:100;
+  background:linear-gradient(180deg,var(--bg) 80%,transparent);backdrop-filter:blur(8px);
+}
+.header-logo{
+  width:44px;height:44px;border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--primary),#5DB8A8);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:22px;box-shadow:0 2px 8px rgba(74,158,142,0.25);flex-shrink:0;
+}
+.header-info{flex:1;min-width:0}
+.header-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:-0.01em}
+.header-subtitle{font-size:0.75rem;color:var(--text-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-badge{font-size:0.7rem;padding:4px 10px;border-radius:var(--radius-full);background:var(--primary-light);color:var(--primary-dark);font-weight:600;white-space:nowrap;flex-shrink:0}
+.main-content{flex:1;overflow-y:auto;padding:0 16px 100px;display:flex;flex-direction:column;gap:16px}
+.welcome-card{background:var(--surface);border-radius:var(--radius-lg);padding:28px 24px;box-shadow:var(--shadow-md);text-align:center}
+.welcome-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary-light),#D4F0EA);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:36px}
+.welcome-card h2{font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.welcome-card .subtitle{color:var(--text-med);font-size:0.9rem;margin-bottom:20px;line-height:1.5}
+.consent-box{background:var(--surface-alt);border-radius:var(--radius);padding:16px;text-align:left;font-size:0.8rem;color:var(--text-med);line-height:1.7;margin-bottom:16px;border-left:3px solid var(--accent)}
+.consent-box strong{color:var(--text);font-size:0.85rem}
+.consent-box .warn{color:var(--risk-high);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:var(--radius-full);font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;text-decoration:none;width:100%}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(74,158,142,0.3)}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:transparent;color:var(--primary);border:2px solid var(--primary)}
+.btn-outline:hover{background:var(--primary-light)}
+.btn-sm{padding:8px 16px;font-size:0.8rem;width:auto}
+.btn-accent{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(232,168,124,0.3)}
+.btn-group{display:flex;flex-direction:column;gap:10px}
+.module-cards{display:flex;flex-direction:column;gap:12px}
+.module-card{background:var(--surface);border-radius:var(--radius);padding:18px 16px;box-shadow:var(--shadow-sm);cursor:pointer;border:1px solid var(--border-light);transition:all 0.2s;display:flex;align-items:center;gap:14px}
+.module-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
+.module-card:active{transform:scale(0.98)}
+.module-card .m-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.module-card .m-info{flex:1;min-width:0}
+.module-card .m-title{font-weight:700;font-size:0.95rem;color:var(--text)}
+.module-card .m-desc{font-size:0.78rem;color:var(--text-light);margin-top:2px}
+.module-card .m-arrow{font-size:1.2rem;color:var(--text-light)}
+.chat-container{flex:1;display:flex;flex-direction:column;gap:4px}
+.chat-messages{flex:1;display:flex;flex-direction:column;gap:14px;padding:8px 0;overflow-y:auto}
+.message{display:flex;gap:10px;max-width:88%;animation:msgIn 0.35s ease-out}
+@keyframes msgIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.message.ai{align-self:flex-start}
+.message.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.message.ai .msg-avatar{background:var(--primary-light)}
+.message.user .msg-avatar{background:#D4EDE8}
+.msg-bubble{padding:12px 16px;border-radius:18px;font-size:0.9rem;line-height:1.6;box-shadow:var(--shadow-sm);position:relative}
+.message.ai .msg-bubble{background:var(--chat-ai);color:var(--text);border-bottom-left-radius:6px}
+.message.user .msg-bubble{background:var(--chat-user);color:#fff;border-bottom-right-radius:6px}
+.msg-bubble p{margin:0}
+.msg-bubble p+p{margin-top:8px}
+.msg-speaker-btn{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;background:var(--surface);border:1px solid var(--border);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;z-index:2;opacity:0;transition:opacity 0.2s}
+.message.ai .msg-bubble:hover .msg-speaker-btn{opacity:1}
+.quick-replies{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px}
+.quick-reply{padding:10px 18px;border-radius:var(--radius-full);background:var(--surface);border:1.5px solid var(--border);font-family:var(--font-body);font-size:0.85rem;color:var(--text);cursor:pointer;transition:all 0.2s;white-space:nowrap;pointer-events:auto}
+.quick-reply:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
+.quick-reply:active{transform:scale(0.96)}
+.quick-reply.selected{background:var(--primary);color:#fff;border-color:var(--primary)}
+.quick-reply:disabled{opacity:0.5;pointer-events:none;cursor:not-allowed}
+.input-bar{display:flex;gap:8px;padding:4px 0}
+.input-bar input{flex:1;padding:12px 16px;border-radius:var(--radius-full);border:1.5px solid var(--border);font-family:var(--font-body);font-size:0.9rem;background:var(--surface);color:var(--text);outline:none;transition:border-color 0.2s}
+.input-bar input:focus{border-color:var(--primary)}
+.btn-icon{width:44px;height:44px;border-radius:50%;border:none;background:var(--primary);color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s}
+.btn-icon:active{transform:scale(0.93)}
+.btn-icon.voice-btn{background:var(--accent)}
+.btn-icon.speaker-btn{background:var(--primary-light);color:var(--primary-dark)}
+.btn-icon.voice-btn.listening{background:var(--risk-high);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,136,122,0.4)}50%{box-shadow:0 0 0 12px rgba(232,136,122,0)}}
+.results-card{background:var(--surface);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-md)}
+.result-header{text-align:center;margin-bottom:20px}
+.result-score{font-family:var(--font-display);font-size:3rem;font-weight:700;line-height:1}
+.result-label{font-size:0.9rem;color:var(--text-med);margin-top:4px}
+.risk-badge{display:inline-block;padding:8px 20px;border-radius:var(--radius-full);font-weight:700;font-size:0.9rem;margin:8px 0}
+.risk-badge.low{background:var(--risk-low-bg);color:#2D7A54}
+.risk-badge.mid{background:var(--risk-mid-bg);color:#8A6D20}
+.risk-badge.high{background:var(--risk-high-bg);color:#A84030}
+.advice-section{background:var(--surface-alt);border-radius:var(--radius);padding:16px;margin-top:12px}
+.advice-section h4{font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.advice-section ul{list-style:none;padding:0;font-size:0.82rem;color:var(--text-med);line-height:1.8}
+.advice-section ul li::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary);margin-right:8px;vertical-align:middle}
+.trend-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-top:12px}
+.trend-box h4{font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:10px}
+.trend-row{display:flex;justify-content:space-between;font-size:0.82rem;padding:4px 0;color:var(--text-med)}
+.trend-row .val{font-weight:600;color:var(--text)}
+.trend-arrow{font-size:1.2rem}
+.trend-arrow.down{color:var(--risk-low)}.trend-arrow.up{color:var(--risk-high)}.trend-arrow.same{color:var(--text-light)}
+.case-card{background:var(--surface);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm);border:1px solid var(--border-light);cursor:pointer;transition:all 0.2s}
+.case-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
+.case-card .case-header{display:flex;justify-content:space-between;align-items:center}
+.case-card .case-title{font-weight:700;color:var(--text);font-size:0.95rem}
+.case-card .case-tag{font-size:0.7rem;padding:3px 10px;border-radius:var(--radius-full);font-weight:600}
+.case-card .case-brief{font-size:0.8rem;color:var(--text-med);margin-top:8px;line-height:1.6}
+.case-detail{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border-light)}
+.case-detail.open{display:block}
+.case-step{margin-bottom:16px}
+.case-step h5{font-size:0.82rem;color:var(--primary-dark);margin-bottom:4px}
+.case-step p{font-size:0.8rem;color:var(--text-med);line-height:1.7}
+.case-step .options{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.case-step .opt-btn{padding:8px 14px;font-size:0.78rem;border-radius:var(--radius-full);border:1.5px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.2s}
+.case-step .opt-btn:hover{border-color:var(--primary);background:var(--primary-light)}
+.case-step .opt-btn.correct{border-color:var(--risk-low);background:var(--risk-low-bg);color:#2D7A54}
+.case-step .opt-btn.wrong{border-color:var(--risk-high);background:var(--risk-high-bg);color:#A84030}
+.case-feedback{padding:10px 14px;border-radius:var(--radius-sm);font-size:0.8rem;margin-top:8px;display:none}
+.case-feedback.show{display:block}
+.case-feedback.good{background:var(--risk-low-bg);color:#2D7A54}
+.case-feedback.bad{background:var(--risk-high-bg);color:#A84030}
+.faq-search{padding:12px 16px;border-radius:var(--radius-full);border:1.5px solid var(--border);font-family:var(--font-body);font-size:0.9rem;background:var(--surface);color:var(--text);outline:none;width:100%;transition:border-color 0.2s}
+.faq-search:focus{border-color:var(--primary)}
+.faq-list{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.faq-item{background:var(--surface);border-radius:var(--radius);padding:14px 16px;cursor:pointer;border:1px solid var(--border-light);transition:all 0.2s;box-shadow:var(--shadow-sm)}
+.faq-item:hover{border-color:var(--primary)}
+.faq-item.active{border-color:var(--primary);background:var(--primary-light)}
+.faq-q{font-size:0.88rem;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.faq-q .q-icon{font-size:0.75rem;color:var(--primary);flex-shrink:0}
+.faq-a{font-size:0.8rem;color:var(--text-med);margin-top:8px;padding-top:8px;border-top:1px solid var(--border-light);line-height:1.7;display:none}
+.faq-item.active .faq-a{display:block}
+.history-empty{text-align:center;padding:40px 20px;color:var(--text-light);font-size:0.9rem}
+.history-list{display:flex;flex-direction:column;gap:10px}
+.history-item{background:var(--surface);border-radius:var(--radius);padding:14px 16px;border:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-sm)}
+.history-date{font-size:0.8rem;color:var(--text-light)}
+.history-type{font-size:0.7rem;padding:2px 8px;border-radius:var(--radius-full);font-weight:600}
+.history-score{font-weight:700;font-size:1.1rem}
+.history-risk{font-size:0.75rem;padding:3px 10px;border-radius:var(--radius-full);font-weight:600}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:var(--surface);border-top:1px solid var(--border-light);display:flex;padding:6px 8px;padding-bottom:max(6px,env(safe-area-inset-bottom));z-index:100;box-shadow:0 -2px 12px rgba(44,62,53,0.04)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;cursor:pointer;border:none;background:none;font-family:var(--font-body);font-size:0.7rem;color:var(--text-light);transition:color 0.2s;border-radius:var(--radius-sm)}
+.nav-item:hover{color:var(--primary)}
+.nav-item.active{color:var(--primary);font-weight:600}
+.nav-icon{font-size:1.3rem}
+.panel{display:none}
+.panel.active{display:block}
+.action-bar{display:flex;gap:10px;padding:12px 0}
+.action-bar .btn{flex:1}
+.typing{display:flex;gap:4px;padding:8px 12px}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--text-light);animation:typing 1.4s ease-in-out infinite}
+.typing span:nth-child(2){animation-delay:0.2s}
+.typing span:nth-child(3){animation-delay:0.4s}
+@keyframes typing{0%,60%,100%{opacity:0.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+.section-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);padding:4px 0}
+.text-center{text-align:center}
+.mt-4{margin-top:4px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}
+.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}
+.hidden{display:none!important}
+.sticky-top{position:sticky;top:60px;z-index:50;background:var(--bg);padding:8px 0}
+.voice-status{font-size:0.75rem;color:var(--accent);text-align:center;padding:4px;display:none}
+.voice-status.show{display:block}
+</style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+  <header class="app-header">
+    <div class="header-logo">🧠</div>
+    <div class="header-info">
+      <div class="header-title">健脑小助手</div>
+      <div class="header-subtitle">老年认知健康评估 · 教学练习工具</div>
+    </div>
+    <div class="header-badge">教学版</div>
+  </header>
+
+  <main class="main-content" id="mainContent">
+
+    <!-- ============ PANEL: HOME ============ -->
+    <div class="panel active" id="panel-home">
+      <div class="welcome-card">
+        <div class="welcome-icon">🧠</div>
+        <h2>健脑小助手</h2>
+        <p class="subtitle">老年认知健康评估教学智能体<br>涵盖认知筛查 · 情绪评估 · 案例分析三大模块</p>
+        <div class="consent-box">
+          <strong>📋 知情同意</strong><br>
+          本工具提供AD8认知筛查、GDS-15情绪评估和典型病例分析，用于<strong>护理专业教学练习</strong>。对话约需3-10分钟。<br><br>
+          <span class="warn">⚠️ 免责声明：本工具为教学辅助智能体，非医疗器械，不构成医学诊断。评估结果仅供学习参考，不能替代专业医生的临床评估。如有健康担忧，请前往正规医疗机构就诊。</span><br><br>
+          <strong>🔒 隐私说明：</strong>不收集个人身份信息，数据仅存储在您的本地设备中。
+        </div>
+      </div>
+
+      <div class="module-cards mt-16">
+        <div class="module-card" onclick="startModule('ad8')">
+          <div class="m-icon" style="background:#E8F4F1">📝</div>
+          <div class="m-info"><div class="m-title">AD8 认知筛查</div><div class="m-desc">8题对话式评估 · 判断力/记忆/时间定向</div></div>
+          <div class="m-arrow">→</div>
+        </div>
+        <div class="module-card" onclick="startModule('gds')">
+          <div class="m-icon" style="background:#FDF0E6">😊</div>
+          <div class="m-info"><div class="m-title">GDS-15 情绪评估</div><div class="m-desc">15题老年抑郁量表 · 情绪与认知鉴别</div></div>
+          <div class="m-arrow">→</div>
+        </div>
+        <div class="module-card" onclick="switchPanel('case');loadCases()">
+          <div class="m-icon" style="background:#EDE8F4">📋</div>
+          <div class="m-info"><div class="m-title">整合案例分析</div><div class="m-desc">3个典型病例 · 综合评估与护理计划</div></div>
+          <div class="m-arrow">→</div>
+        </div>
+        <div class="module-card" onclick="switchPanel('faq');showFAQ()">
+          <div class="m-icon" style="background:#F5E8F0">📚</div>
+          <div class="m-info"><div class="m-title">知识库（50条）</div><div class="m-desc">AD8/GDS/痴呆/抑郁/护理/药物知识</div></div>
+          <div class="m-arrow">→</div>
+        </div>
+        <div class="module-card" onclick="switchPanel('history');loadHistory()">
+          <div class="m-icon" style="background:#E8F0F5">📊</div>
+          <div class="m-info"><div class="m-title">历史测评记录</div><div class="m-desc">多次测评纵向对比 · 趋势分析</div></div>
+          <div class="m-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PANEL: CHAT ============ -->
+    <div class="panel" id="panel-chat">
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="quick-replies" id="quickReplies"></div>
+        <div class="voice-status" id="voiceStatus">🎤 正在聆听...</div>
+        <div class="input-bar" id="inputBar">
+          <button class="btn-icon voice-btn" id="voiceBtn" title="语音输入" onclick="toggleVoice()">🎤</button>
+          <input type="text" id="chatInput" placeholder="输入回答..." onkeydown="if(event.key==='Enter')sendText()">
+          <button class="btn-icon speaker-btn" id="speakerToggle" title="语音播报：关闭" onclick="toggleSpeaker()">🔇</button>
+          <button class="btn-icon" onclick="sendText()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PANEL: RESULTS ============ -->
+    <div class="panel" id="panel-results">
+      <div id="resultsContent"></div>
+      <div class="action-bar mt-16">
+        <button class="btn btn-outline btn-sm" onclick="restartModule()">🔄 重新测评</button>
+        <button class="btn btn-primary btn-sm" onclick="switchPanel('home')">🏠 返回首页</button>
+      </div>
+    </div>
+
+    <!-- ============ PANEL: CASE STUDIES ============ -->
+    <div class="panel" id="panel-case">
+      <h3 class="section-title">📋 整合案例分析</h3>
+      <p style="font-size:0.8rem;color:var(--text-med);margin-bottom:8px">选择合适的评估工具，练习"筛查→鉴别→护理计划"全流程</p>
+      <div id="caseList"></div>
+      <div id="caseDetail"></div>
+    </div>
+
+    <!-- ============ PANEL: FAQ ============ -->
+    <div class="panel" id="panel-faq">
+      <h3 class="section-title">📚 AD8与认知健康知识库（50条）</h3>
+      <input type="text" class="faq-search" id="faqSearch" placeholder="🔍 搜索问题..." oninput="filterFAQ()">
+      <div class="faq-list" id="faqList"></div>
+    </div>
+
+    <!-- ============ PANEL: HISTORY ============ -->
+    <div class="panel" id="panel-history">
+      <h3 class="section-title">📊 历史测评记录</h3>
+      <div id="historyContent"></div>
+      <div class="action-bar mt-16">
+        <button class="btn btn-outline btn-sm" style="flex:1" onclick="clearHistory()">🗑 清除全部记录</button>
+      </div>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-panel="home" onclick="switchPanel('home')"><span class="nav-icon">🏠</span>首页</button>
+    <button class="nav-item" data-panel="chat" id="nav-chat" onclick="switchPanel('chat')"><span class="nav-icon">💬</span>测评</button>
+    <button class="nav-item" data-panel="case" onclick="switchPanel('case');loadCases()"><span class="nav-icon">📋</span>案例</button>
+    <button class="nav-item" data-panel="faq" onclick="switchPanel('faq');showFAQ()"><span class="nav-icon">📚</span>知识库</button>
+    <button class="nav-item" data-panel="history" onclick="switchPanel('history');loadHistory()"><span class="nav-icon">📊</span>历史</button>
+  </nav>
+</div>
+
+<script>
+// ============================================================
+// DATA: AD8 (8 questions) + GDS-15 (15 questions)
+// ============================================================
+
+const AD8_QUESTIONS = [
+  {id:1, domain:'判断力与决策', question:'老人家，跟一年前相比，您在判断事情、做决定方面，有没有感觉比以前困难了？比如买东西算账、处理家里财务、或者遇到问题时拿主意。', followup:'能举个例子吗？最近有没有遇到让您觉得特别难做决定的事？'},
+  {id:2, domain:'兴趣与爱好', question:'跟一年前比，您以前喜欢的活动、兴趣爱好，现在还经常做吗？比如以前爱打牌、跳舞、做手工、串门聊天这些。', followup:'是身体原因不方便做，还是感觉自己不太想做了、提不起兴趣了？'},
+  {id:3, domain:'重复言语', question:'您有没有发现——或者家人提醒您——同样的话、同样的问题会重复说好几遍？', followup:'大概多久出现一次这种情况？是偶尔还是经常？家人有没有因为这个跟您提过？'},
+  {id:4, domain:'学习新事物', question:'学一样新东西的时候，比如新买的手机怎么用、新的家用电器怎么操作，您觉得跟一年前比，有没有更吃力了？', followup:'有没有什么东西是以前会用，但现在不太会用了的？'},
+  {id:5, domain:'时间定向', question:'老人家，您最近有没有出现忘了今天是几月几号，或者搞混了现在是什么季节的情况？不是偶尔一下想不起来，而是真的弄错了。', followup:'发生这种情况的时候，过一会儿能自己想起来吗？还是需要别人提醒？'},
+  {id:6, domain:'财务处理', question:'处理比较复杂的财务问题时——比如去银行办业务、管理自己的退休金或存款，跟一年前比有没有觉得更困难了？', followup:'是您自己觉得有变化，还是家人也注意到了这个变化？'},
+  {id:7, domain:'记忆约定', question:'跟一年前比，您有没有更容易忘记一些重要的约定或事情？比如跟医生约好的时间、要吃的药、或者家人交代的事。', followup:'您一般用什么方法记住这些事？这些方法现在还管用吗？'},
+  {id:8, domain:'整体认知', question:'整体来说，跟一年前比，您觉得自己的记忆力或者思考能力有没有明显退步——是那种家里人也能看出来的变化？', followup:'这些变化有没有影响到您的日常生活？比如独自出门、管钱、或者照顾自己？'}
+];
+
+const GDS_QUESTIONS = [
+  {id:1, text:'总的来说，您对自己目前的生活满意吗？', reverse:true, domain:'生活满意度'},
+  {id:2, text:'您是否放弃了很多以前常做的活动和兴趣爱好？', reverse:false, domain:'兴趣减退'},
+  {id:3, text:'您是否觉得自己的生活很空虚？', reverse:false, domain:'空虚感'},
+  {id:4, text:'您是否经常感到无聊、厌烦？', reverse:false, domain:'无聊感'},
+  {id:5, text:'您对未来充满希望吗？', reverse:true, domain:'希望感'},
+  {id:6, text:'您是否被一些想法所困扰，怎么都摆脱不了？', reverse:false, domain:'思维困扰'},
+  {id:7, text:'您大部分时间精神状态都很好吗？', reverse:true, domain:'精神状态'},
+  {id:8, text:'您是否担心会有不好的事情发生在自己身上？', reverse:false, domain:'担忧恐惧'},
+  {id:9, text:'您大部分时间都感到快乐吗？', reverse:true, domain:'快乐感'},
+  {id:10, text:'您是否经常感到无助、需要别人帮忙才能做事？', reverse:false, domain:'无助感'},
+  {id:11, text:'您是否经常感到坐立不安、心烦意乱？', reverse:false, domain:'焦躁不安'},
+  {id:12, text:'您宁愿待在家里，也不愿出去做些新鲜事吗？', reverse:false, domain:'社交退缩'},
+  {id:13, text:'您是否经常为未来而担心？', reverse:false, domain:'未来忧虑'},
+  {id:14, text:'您是否觉得自己的记性比以前差了很多？', reverse:false, domain:'记忆主诉'},
+  {id:15, text:'您是否觉得现在活着很没意思？', reverse:false, domain:'生命意义'}
+];
+
+// GDS cutoff remarks
+function getGDSResult(score) {
+  if (score <= 4) return {level:'low',label:'情绪正常范围',cls:'low',emoji:'😊',
+    desc:'GDS-15得分0-4分，未提示明显抑郁症状。老年期轻度情绪波动属正常范围。',
+    advice:[
+      '保持社交活动和兴趣爱好，每周至少2-3次有意义的社交',
+      '规律运动和充足睡眠有助于维持良好情绪',
+      '如持续感到情绪低落超过2周，建议进一步评估'
+    ],
+    followup:'如有需要，可每半年复测一次'
+  };
+  if (score <= 8) return {level:'mid',label:'轻度抑郁倾向',cls:'mid',emoji:'😐',
+    desc:'GDS-15得分5-8分，提示存在轻度抑郁症状。注意：老年抑郁症常表现为躯体不适、兴趣减退而非明显悲伤，易被误认为"正常老化"。',
+    advice:[
+      '建议1-2周内到精神科/心理科或老年医学科进一步评估',
+      '排查躯体原因：甲状腺功能减退、维生素B12缺乏、药物副作用均可引起类抑郁症状',
+      '增加日间光照暴露（上午户外活动30分钟以上）',
+      '家属注意：多陪伴、少说教，不要用"想开点"劝慰——抑郁症不是态度问题，是疾病'
+    ],
+    followup:'建议1-3个月复测GDS-15'
+  };
+  if (score <= 11) return {level:'mid',label:'中度抑郁倾向',cls:'mid',emoji:'😟',
+    desc:'GDS-15得分9-11分，提示中度抑郁症状。抑郁与认知障碍经常共存（约40%的MCI患者同时有抑郁症状），需要联合评估。',
+    advice:[
+      '🔴 尽快（1周内）到精神科或心理科就诊，完成系统评估',
+      '同时进行认知评估（AD8/MMSE/MoCA），排除"假性痴呆"',
+      '确保居家安全：抑郁老人可能有自伤风险，需要照护者关注',
+      '治疗通常包括抗抑郁药物+心理治疗，多数老年抑郁症治疗效果良好'
+    ],
+    followup:'治疗后每1-2月复测，监测改善情况'
+  };
+  return {level:'high',label:'重度抑郁倾向',cls:'high',emoji:'🔴',
+    desc:'GDS-15得分12-15分，提示重度抑郁症状。需要立即专业干预。注意与痴呆鉴别——抑郁症可表现为"假性痴呆"（可逆），而真正的痴呆是进行性的。',
+    advice:[
+      '🔴 立即（24-48小时内）到精神科就诊，评估是否需要住院治疗',
+      '评估自杀风险：直接询问"有没有觉得活着没意思，甚至有结束生命的想法？"',
+      '确保24小时有人陪伴，移除家中危险物品',
+      '与认知评估联合进行：鉴别"抑郁性假性痴呆"与真正的神经退行性痴呆',
+      '电休克治疗（ECT）对老年重度抑郁有效且安全，不要因年龄排除此选项'
+    ],
+    followup:'遵医嘱密切随访，病情稳定后每1-2月复测GDS-15'
+  };
+}
+
+// ============================================================
+// FAQ DATA (50 items: original 30 + 20 new)
+// ============================================================
+const FAQ_EXTRA = [
+  {q:'GDS-15是什么？',a:'GDS-15（Geriatric Depression Scale-15）是专为老年人设计的抑郁筛查量表，包含15个"是/否"问题。由Yesavage等人开发，广泛用于社区和临床老年人群的情绪评估。得分0-4为正常，5-8分提示轻度抑郁，9-11分提示中度抑郁，12-15分提示重度抑郁。GDS-15不评估躯体症状（如失眠、食欲），因此比普通抑郁量表更适合老年人。'},
+  {q:'为什么要同时做AD8和GDS-15？',a:'在老年护理中，认知障碍和抑郁症经常共存且相互混淆。约30-40%的MCI患者同时存在抑郁症状；而老年抑郁症可表现为"假性痴呆"——突出的认知下降主诉但实际神经心理测试表现优于主诉程度。联合使用AD8（认知筛查）+ GDS-15（情绪筛查）是老年综合评估的基本套路，也是护理教学中"认知-情绪联合评估"的核心训练内容。'},
+  {q:'什么是假性痴呆？',a:'假性痴呆（Pseudodementia）指由抑郁症等精神疾病引起的、类似痴呆的认知功能下降表现。特点：①起病较快（数周-数月），常有明确诱因；②患者常主动抱怨记忆力差，夸大认知问题（"我什么都不记得了"）；③认知测试表现波动大，心情好时表现明显改善；④"不知道"回答多见；⑤抗抑郁治疗后认知改善。约10-30%的"假性痴呆"后续发展为真性痴呆，需长期随访。'},
+  {q:'老年抑郁症有哪些特殊表现？',a:'老年抑郁症常不典型：①躯体化——反复诉说疼痛、乏力、胃肠不适，而非表达情绪低落；②兴趣减退而非悲伤——"没什么意思""不想出门"；③认知主诉突出——"记性不如以前了"；④焦虑和激越——坐立不安、反复担心；⑤依赖行为——过度需要子女陪伴；⑥疑病——反复就医但检查无异常。护理教学中强调使用GDS-15而非单问"您心情好吗"。'},
+  {q:'MCI和痴呆的区别是什么？',a:'关键区别在于日常生活功能是否受损。MCI（轻度认知障碍）：认知测试有客观下降，但基本日常生活自理（独自购物、管钱、服药、出行等不受明显影响）。痴呆：认知下降已明显影响日常生活功能，需要他人帮助才能完成上述活动。AD8可用于早期筛查MCI和痴呆，但鉴别MCI vs 痴呆需要结合日常生活功能评估（如Barthel指数、IADL量表）。'},
+  {q:'AD8得分2分就一定有问题吗？',a:'不一定。AD8灵敏但特异度有限。得分2分（尤其是年轻时基线认知很高的人）可能只是正常波动，也可能是MCI的早期信号。临床处置：①结合知情者观察（家属的反馈比本人报告更可靠）；②考虑教育水平校正；③进行更详细的认知测试（MMSE/MoCA）；④关注变化速度——如果3-6个月后复测得分为4分，则更有临床意义。这也是为什么纵向追踪重要。'},
+  {q:'认知障碍老人的用药管理要点？',a:'①全面药物复核（Beers标准），停用可能影响认知的药物（抗胆碱能药、苯二氮䓬类、抗组胺药等）；②简化用药方案，使用药盒分装；③设置服药提醒（闹钟、家属监督）；④定期评估药物依从性；⑤警惕重复服药——认知障碍老人可能忘记已服药而再次服用；⑥阿尔茨海默病药物治疗（多奈哌齐、卡巴拉汀、美金刚等）需在专科医生指导下使用。'},
+  {q:'向老人告知认知筛查结果的沟通技巧？',a:'核心原则：①使用"脑健康""记忆健康"等中性词汇，避免"痴呆""老年痴呆"等标签；②强调"变化"而非"得分"（"跟一年前比有些小变化"）；③正常化体验（"很多老年朋友都有类似情况"）；④提供明确的下一步行动而非空泛安慰；⑤邀请家属参与后续讨论；⑥关注老人的情绪反应，留出提问时间。这些沟通技巧是护理教学中AD8实训的核心考核点。'},
+  {q:'老年人居家防跌倒的环境改造建议？',a:'①照明：走廊和卫生间使用感应灯，夜间留小夜灯；②地面：移除地毯边角和小垫子，保持地面干燥；③扶手：马桶旁、淋浴区、床旁安装扶手；④家具：避免尖角，高度合适（椅子座高45-50cm）；⑤物品：常用物品放在腰部到肩部高度，避免踮脚或弯腰取物；⑥鞋子：穿防滑、合脚、无需系鞋带的鞋子；⑦宠物：注意小型宠物可能绊倒老人。'},
+  {q:'照护者如何自我关怀？',a:'照护认知障碍老人是长期高压工作。建议：①定期"喘息服务"——利用社区日间照料中心、短期托管，每周至少半天完全脱离照护；②参加家属互助团体（线上线下均可）；③定期体检——照护者心血管疾病和抑郁风险均升高；④设定合理期待——不能"治愈"但要认可自己的付出；⑤学习疾病知识——理解"行为问题是疾病表现，不是针对你"；⑥经济规划——了解长期照护保险和相关政策补贴。'},
+  {q:'画钟测验(CDT)是什么？',a:'画钟测验（Clock Drawing Test）是一项简便的认知筛查工具，要求受试者画出圆形钟面、填写数字1-12、画出指定时间的指针（通常为11:10）。CDT评估多个认知域：视空间能力、执行功能、数字概念、计划组织能力。CDT异常在阿尔茨海默病早期即可出现，常与AD8联合使用。评分方法有多种（如Shulman法：1-6分），<3分提示认知障碍可能。CDT不能单独诊断，需结合其他评估。'},
+  {q:'痴呆的行为和精神症状(BPSD)有哪些？',a:'BPSD（Behavioral and Psychological Symptoms of Dementia）是痴呆的非认知症状，发生率高达80-90%。包括：①精神病性症状——幻觉（常为视幻觉）、妄想（如被偷妄想、配偶不忠妄想）；②情绪症状——抑郁、焦虑、易怒；③行为症状——激越、徘徊、攻击行为、睡眠障碍、食欲异常。BPSD是导致照护者压力最大的原因，也是老人入住机构的常见原因。管理原则：非药物干预优先（环境调整、行为干预），必要时谨慎使用药物。'},
+  {q:'BPSD的非药物管理策略？',a:'①寻找触发因素（疼痛、便秘、饥饿、环境嘈杂、照护者态度）；②环境调整：减少噪音、足够照明、熟悉物品摆放；③行为干预：转移注意力（提供简单的重复性活动如叠毛巾）、音乐疗法、怀旧疗法；④沟通技巧：不争辩、不纠正、多肯定、用简单句；⑤建立规律：固定作息减少困惑和焦虑；⑥芳香疗法和按摩：部分研究支持薰衣草精油对激越行为的缓解作用。除非BPSD严重威胁安全，否则避免使用抗精神病药。'},
+  {q:'用于认知障碍的药物有哪些？',a:'阿尔茨海默病治疗药物分两类：①胆碱酯酶抑制剂——多奈哌齐（安理申）、卡巴拉汀（艾斯能）、加兰他敏，适用于轻中度AD，通过增加脑内乙酰胆碱水平改善认知功能；②NMDA受体拮抗剂——美金刚（易倍申），适用于中重度AD。两类药物均为对症治疗，不能逆转或治愈疾病，但可延缓功能下降约6-12个月。注意：所有药物均需在专科医生指导下使用，有明确的适应症和禁忌症。'},
+  {q:'老年人用药Beers标准是什么？',a:'Beers标准是由美国老年医学会（AGS）发布的老年潜在不适当用药清单。核心原则：①避免使用强抗胆碱能药物（如苯海拉明、奥昔布宁速释片），因其加重认知障碍和谵妄风险；②避免使用苯二氮䓬类镇静催眠药（如安定、舒乐安定），增加跌倒和认知损害风险；③避免使用某些抗精神病药用于BPSD（除非非药物干预无效且严重）；④注意肾功能调整剂量；⑤定期进行药物全面审查。"停药"有时比"加药"对老人更有益。'},
+  {q:'如何与认知障碍老人有效沟通？',a:'沟通黄金法则：①面对面、保持眼神接触、微笑；②用简短、具体的句子，一次只问一个问题；③给予充分等待时间（老人可能需要10-20秒处理信息）；④不争辩、不纠正——如果老人说"我要去找我妈（已故）"，不要反驳，改为"跟我说说你妈妈吧"（进入ta的世界）；⑤用身体语言辅助理解（手势、示范）；⑥关注情感而非事实——回应情绪而非纠正错误记忆；⑦避免"婴儿语"——用尊重的成人语气但更慢更清晰；⑧减少环境干扰（关掉电视、在安静环境交谈）。'},
+  {q:'老年护理中的伦理原则有哪些？',a:'①尊重自主——在老人有能力时让其参与医疗决策，尊重预先医疗指示；②行善不伤害——权衡干预措施的获益与风险（如约束带的利弊）；③公正——公平分配照护资源（社区vs机构vs家庭）；④尊严——不论认知状态如何，老人均享有尊严和尊重的权利；⑤知情同意——在老人有决策能力时获取知情同意，能力下降时由法定代理人代为决策但尽量让老人参与。这些伦理原则贯穿《老年护理学》全部教学内容。'},
+  {q:'社区认知筛查的工作流程？',a:'标准社区认知筛查流程：①登记与知情同意（说明筛查目的、局限和后续步骤）；②基本信息采集（年龄、教育水平、既往病史、用药史）；③初筛工具施测（AD8由知情者完成 + CDT由老人完成）；④初筛阳性者（AD8≥2分或CDT异常）转诊至上级医院记忆门诊做MMSE/MoCA；⑤排除可逆原因（甲功、B12、梅毒血清学、头颅影像）；⑥综合诊断；⑦建立社区随访档案；⑧对接社区长期照护资源。护理学生应掌握此流程，尤其是步骤①-④的社区实操技能。'},
+  {q:'非药物干预延缓认知衰退的方法汇总？',a:'综合非药物干预方案（证据分级从高到低）：①🎯 运动（强证据）——有氧运动+力量训练+平衡训练，每周≥150分钟；②🎯 认知训练（中等证据）——结构化、有挑战性的多领域认知训练，非简单脑力游戏；③🎯 饮食（强证据）——MIND饮食/地中海饮食；④🎯 社交参与（中等证据）——有意义的社交活动而非被动社交；⑤🎯 血管危险因素控制（强证据）——降压、降糖、降脂；⑥🎯 听力矫正（强证据）——助听器使用；⑦可能有益——正念冥想、音乐疗法、怀旧疗法。关键是"多领域联合干预"效果优于单一干预。'},
+  {q:'轻中重度痴呆的照护重点有何不同？',a:'①轻度：重点在于维持独立——鼓励自理、辅助记忆策略（记事本、标识）、法律财务提前规划、安全评估但避免过度限制；②中度：重点在于安全与结构——建立固定日常流程、防走失措施（GPS定位）、辅助日常生活（穿衣、洗漱提示但不过度代劳）、BPSD管理、照护者培训和支持；③重度：重点在于舒适与尊严——全面生活照护（进食、如厕、翻身）、预防并发症（压疮、肺炎、营养不良）、疼痛评估（因沟通困难常被忽视）、安宁疗护和临终关怀。三个阶段是一个连续谱，照护计划需要动态调整。'}
+];
+
+const FAQ_BASE = [
+  {q:'什么是AD8量表？',a:'AD8（Ascertain Dementia 8）是一项简短的知情者筛查工具，包含8个"是/否"问题，评估个体在过去几年中是否出现认知功能变化。由华盛顿大学开发，每道题询问与一年前相比是否出现特定认知变化，"是"计1分，总分≥2分提示需要进一步认知评估。约3分钟即可完成。'},
+  {q:'AD8量表用于筛查什么？',a:'AD8用于筛查认知障碍和痴呆的早期迹象，覆盖判断力、兴趣爱好、重复言语、学习能力、时间定向、财务处理、记忆约定和整体认知等8个领域。它不是诊断工具，而是初筛工具——筛查阳性者需进一步接受MMSE、MoCA等详细评估及临床诊断。'},
+  {q:'AD8和MMSE有什么区别？',a:'AD8是简短筛查工具（8题，3分钟），依赖知情者观察，侧重"与一年前相比的变化"；MMSE是详细的认知功能评估（30题，10-15分钟），由专业人员直接测试患者，评估定向力、记忆力、计算力、语言等。AD8更适用于社区初筛和教学入门，MMSE适用于临床诊断和病情追踪。'},
+  {q:'AD8得几分需要看医生？',a:'AD8评分标准：0-1分提示认知功能在正常范围，建议每年复查；≥2分提示存在认知变化，建议在1-2周内到神经内科或记忆门诊进一步评估（如MMSE、MoCA）；≥4分提示认知障碍可能性较高，建议尽快（1周内）就诊。最终诊断须由专业医生做出。'},
+  {q:'AD8筛查需要多长时间？',a:'AD8共8道题，平均完成时间为3-5分钟。在临床或教学场景中，建议每道题预留30-45秒的提问和回答时间，整体控制在5分钟以内。如需追问情境细节，可延长至8分钟。'},
+  {q:'谁可以做AD8筛查？',a:'AD8设计为知情者报告工具，通常由了解患者日常情况的家属或照护者完成。在社区场景中，经过培训的社区护士、护理员可以操作AD8初筛。在教学场景中，护理学生可模拟"照护者角色"进行AD8评估练习。'},
+  {q:'AD8可以自己在家做吗？',a:'AD8可以在家属协助下在家完成，作为自我健康监测工具。但自测结果不能替代专业评估。得分≥2分建议携带自测结果到正规医疗机构进行专业认知评估。本智能体提供的练习结果仅供教学参考。'},
+  {q:'认知障碍的十大早期信号是什么？',a:'①记忆减退影响日常生活；②计划或解决问题困难；③难以完成熟悉任务；④时间或地点混淆；⑤理解视觉图像和空间关系困难；⑥言语表达或书写问题；⑦物品放错位置且无法回溯；⑧判断力下降；⑨退出工作或社交活动；⑩情绪和性格改变。AD8覆盖了其中多个领域。'},
+  {q:'阿尔茨海默病有哪些阶段？',a:'一般分为三个阶段：①临床前期（脑内已有病变但无症状，可持续10-20年）；②轻度认知障碍期（MCI，有认知下降但日常生活基本自理）；③痴呆期（认知损害明显影响日常生活，分为轻、中、重度）。AD8在MCI期即可检出异常。'},
+  {q:'记忆力下降就是老年痴呆吗？',a:'不全是。随着年龄增长，轻度记忆力减退是正常老化（"良性健忘"）。关键区别在于：是否影响日常生活功能、是否快速进展、是否有其他伴随症状（如迷路、性格改变）。AD8就是用来区分"正常老化"和"需要进一步评估的认知变化"的工具。'},
+  {q:'如何区分正常老化和痴呆？',a:'正常老化：偶尔忘事但能事后回忆，偶尔需要帮助但基本独立，偶尔找不到词但不影响交流。痴呆警示：频繁遗忘且无法回忆，日常活动需他人帮助，语言表达困难明显影响沟通。AD8阳性（≥2分）+ 日常生活功能受影响，是重要的区分依据。'},
+  {q:'MCI一定会发展成痴呆吗？',a:'不一定。MCI人群中每年约10-15%转化为痴呆（主要是AD），部分人保持稳定，少数人认知功能甚至恢复。规律运动、认知训练、控制血管危险因素可降低转化风险。定期随访（每6-12个月）和AD8复测有助于监测变化趋势。'},
+  {q:'哪些人更容易患阿尔茨海默病？',a:'主要危险因素：高龄、APOE ε4基因携带、痴呆家族史、心血管危险因素（高血压、糖尿病、高胆固醇、肥胖）、吸烟、听力损失、社交孤立、低教育水平、抑郁史、脑外伤史。约40%的痴呆可通过控制可改变危险因素来预防或延缓。'},
+  {q:'认知障碍可以预防吗？',a:'约40%的痴呆可通过控制可改变危险因素来预防或延缓。《柳叶刀》提出12个可改变危险因素：早年（教育不足），中年（听力损失、脑外伤、高血压、过量饮酒、肥胖），晚年（吸烟、抑郁、社交隔离、缺乏运动、空气污染、糖尿病）。'},
+  {q:'什么运动有助于预防认知障碍？',a:'推荐：①有氧运动（快走、游泳、骑车）每周≥150分钟中等强度；②力量训练每周2-3次；③平衡与协调训练（太极、八段锦）降低跌倒和脑外伤风险。运动通过改善脑血流、促进神经营养因子分泌等机制保护认知功能。'},
+  {q:'MIND饮食是什么？',a:'MIND饮食是地中海饮食和DASH饮食的结合，专为脑健康设计。多吃：绿叶蔬菜（每周≥6份）、浆果（每周≥2次）、坚果、全谷物、鱼、禽肉、豆类、橄榄油；少吃：红肉、黄油、奶酪、糕点甜食、油炸食品。研究显示严格遵循MIND饮食可降低53%AD风险。'},
+  {q:'社交活动对大脑健康有帮助吗？',a:'有显著帮助。社交活动通过认知刺激、减轻压力、建立支持网络等机制保护认知。建议每周至少参加2-3次有意义的社交活动，如社区聚会、志愿者服务、兴趣小组。社交隔离是痴呆的可改变危险因素之一。'},
+  {q:'睡眠与认知功能有什么关系？',a:'睡眠是大脑"排毒"的关键时间——深睡眠期间脑内淋巴系统清除β-淀粉样蛋白等代谢废物。长期睡眠不足（<6小时/天）或睡眠质量差与认知下降和AD风险升高相关。建议规律作息、每天7-8小时睡眠、治疗睡眠呼吸暂停。'},
+  {q:'高血压会影响认知功能吗？',a:'会。中年期高血压是晚年认知障碍和痴呆的重要危险因素。高血压损害脑小血管，导致白质病变、微出血、脑萎缩。建议40岁以上每年测血压，确诊高血压者将血压控制在<130/80mmHg。合理控制血压可降低痴呆风险约15%。'},
+  {q:'糖尿病与痴呆风险有关吗？',a:'密切相关。2型糖尿病使痴呆风险升高约50-60%。高血糖通过加重脑血管病变、促进β-淀粉样蛋白沉积、增加氧化应激等途径损害脑组织。良好血糖控制（糖化血红蛋白<7%）可降低认知下降风险。建议糖尿病患者每年进行认知筛查。'},
+  {q:'听力下降与认知障碍有关吗？',a:'有强关联。听力损失是《柳叶刀》识别的最大可改变危险因素（占痴呆风险的8%）。听力下降→社交隔离+认知负荷增加+脑结构改变→加速认知衰退。建议60岁以上定期检查听力，确诊者尽早使用助听器。使用助听器可消除听力损失带来的额外痴呆风险。'},
+  {q:'抑郁症和认知障碍如何区分？',a:'两者常混淆且可同时存在（约30-40%的MCI患者同时有抑郁症状）。鉴别要点：抑郁症起病较快（数周-数月）、有情绪低落核心症状、"不知道"回答多见、认知表现波动大（心情好时表现好）；痴呆起病隐袭（数年）、情绪可正常、"近似错"回答多见、认知表现全天较一致。当难以区分时，先治疗抑郁症再评估认知。这也是本智能体同时集成AD8和GDS-15的原因。'},
+  {q:'认知训练真的有效吗？',a:'有一定效果但要注意科学性。有效的认知训练包括：①加工速度训练（如有用视野训练UFOV）；②记忆策略训练（地点法、间隔提取）；③推理训练。关键是训练任务需有挑战性且循序渐进、多领域结合、持续进行。单纯"刷脑力游戏"证据不足。运动+社交+认知刺激的综合干预效果最好。'},
+  {q:'照顾认知障碍老人要注意什么？',a:'六大要点：①安全第一（防走失、防跌倒、防误服药物、燃气安全）；②建立规律（固定作息和日常流程）；③有效沟通（简单短句、不争辩、多肯定）；④有意义的活动（根据保留能力安排任务，维持尊严）；⑤照护者自我关怀（寻求支持、定期休息）；⑥法律财务提前规划。'},
+  {q:'去哪里做认知评估？',a:'国内可就诊科室：神经内科、记忆门诊（部分三甲医院设有）、老年医学科、精神科/心理科。社区层面可联系社区卫生服务中心进行初步筛查。建议首选设有记忆门诊的三甲医院神经内科。就诊前准备：记录症状出现时间、具体表现、用药清单、既往病史。'},
+  {q:'AD8在教学中有哪些应用？',a:'AD8在护理教学中应用广泛：①《老年护理学》——认知障碍评估实训；②《健康评估》——量表应用与沟通技巧训练；③《社区护理学》——社区老年人群初筛工具；④《精神科护理学》——认知障碍与抑郁症的鉴别评估入门。本智能体将量表转化为对话练习，填补了传统教学中"会背但不会问"的缺口。'},
+  {q:'如何向老人解释AD8结果？',a:'沟通原则：①使用通俗语言，避免"痴呆""阿尔茨海默病"等标签（可说"记忆健康筛查"）；②强调"变化趋势"而非"分数"；③提供具体可行的下一步建议而非空洞安慰；④邀请家属参与讨论。得分低时说"目前情况还不错，每年关注一次即可"；得分高时说"有一些变化值得进一步看看，建议找专业医生做个更详细的评估"。'},
+  {q:'认知障碍老人居家安全注意什么？',a:'①防走失：定位设备或身份信息卡；②厨房安全：燃气报警器、自动断电水壶；③浴室安全：防滑垫、扶手、水温控制；④药物管理：药盒分装、服药提醒；⑤环境标识：大字体、高对比度的房间标识和日历时钟；⑥防跌倒：移除地面杂物、充足照明、合适高度的家具。'},
+  {q:'家属如何支持认知障碍老人？',a:'①接纳与学习：了解疾病，调整期待，不争辩不纠正；②维持独立：鼓励在安全范围内自己做事；③创造愉快时刻：听老歌、看老照片、做简单手工，关注情感连接；④建立支持圈：加入家属互助团体，分担照护压力；⑤照护者自我健康：定期体检、保证休息。'},
+  {q:'老年综合评估(CGA)包括哪些内容？',a:'CGA是老年医学的核心方法，涵盖：①医学评估（疾病诊断、用药审查）；②功能评估（ADL日常生活活动、IADL工具性日常活动）；③认知评估（MMSE/MoCA/AD8）；④情绪评估（GDS-15）；⑤营养评估（MNA-SF）；⑥社会支持评估；⑦环境安全评估。本智能体覆盖了认知和情绪两个核心维度，可配合《老年护理学》CGA章节教学使用。'}
+];
+
+const FAQ_DATA = [...FAQ_BASE, ...FAQ_EXTRA];
+
+// ============================================================
+// CASE STUDIES (3 cases)
+// ============================================================
+const CASE_DATA = [
+  {
+    id:1, title:'案例一：可疑MCI', tag:'轻度', tagColor:'var(--risk-low-bg)',tagText:'#2D7A54',
+    brief:'张某，女，68岁，大学文化，退休教师。女儿发现近半年来母亲常重复问同一个问题、有时忘记刚放的东西在哪，但日常生活自理良好。由女儿陪同就诊。',
+    sections:[
+      {title:'Step 1：选择初筛工具',question:'面对这位老人，你首先选择哪个评估工具？',
+        options:[{text:'A. AD8（由女儿完成）',correct:true,feedback:'正确！AD8是知情者报告工具，由了解患者的家属完成最合适。女儿已观察半年，适合作为AD8的知情者。'},{text:'B. GDS-15（由老人完成）',correct:false,feedback:'GDS-15可配合使用，但不作为首选。主诉以认知问题为主而非情绪问题。'},{text:'C. 直接做MMSE',correct:false,feedback:'MMSE是详细评估工具，在初筛阳性后再做更合适。社区/门诊场景先用AD8初筛更高效。'}]},
+      {title:'Step 2：解读AD8结果',question:'女儿完成AD8后得分为3分（判断力、重复言语、记忆约定三项"是"）。如何向老人和女儿解释？',
+        options:[{text:'A. "您可能得了轻度痴呆，需要用药"',correct:false,feedback:'❌ 不要在初筛阶段就用"痴呆"标签，且AD8不能直接诊断。'},{text:'B. "筛查结果提示跟一年前相比有一些变化，建议做个更详细的认知评估，比如MMSE"',correct:true,feedback:'✅ 准确且得体：用"变化"而非"疾病"，提供明确的下一步行动。'},{text:'C. "不用担心，很多人老了都这样"',correct:false,feedback:'❌ 空洞安慰可能延误诊断。AD8=3分已达到"需要进一步评估"的阈值。'}]},
+      {title:'Step 3：联合评估',question:'老人后续完成了MMSE（得分24/30，扣分主要在延迟回忆）和GDS-15（得分3分）。综合判断最可能的诊断方向是？',
+        options:[{text:'A. 阿尔茨海默病痴呆',correct:false,feedback:'MMSE=24分尚未达到痴呆范围（一般<24分），且日常生活自理良好。'},{text:'B. 轻度认知障碍(MCI)',correct:true,feedback:'✅ AD8=3分 + MMSE轻度受损 + 日常生活自理 = MCI的典型表现。GDS=3排除了明显的抑郁因素。'},{text:'C. 老年抑郁症（假性痴呆）',correct:false,feedback:'GDS=3分在正常范围，不支持抑郁诊断。'}]},
+      {title:'Step 4：制定护理计划',question:'针对该MCI患者，以下哪项护理措施优先级最高？',
+        options:[{text:'A. 立即开始抗痴呆药物治疗',correct:false,feedback:'MCI阶段药物治疗证据有限。非药物干预是MCI阶段的核心策略。'},{text:'B. 制定认知训练+运动+社交的综合干预计划，定期复查',correct:true,feedback:'✅ MCI阶段的核心是延缓进展：每周150分钟运动+MIND饮食+认知训练+社交+每6个月复查AD8/MMSE。'},{text:'C. 建议入住养老机构',correct:false,feedback:'MCI患者日常生活自理，无需入住机构。过度限制会加速功能下降。'}]}
+    ]
+  },
+  {
+    id:2, title:'案例二：中重度阿尔茨海默病', tag:'中重度', tagColor:'var(--risk-high-bg)',tagText:'#A84030',
+    brief:'李某，男，75岁，初中文化。近2年记忆力逐渐下降，现已不认得回家的路（走失2次），不能自己管钱，有时认不出老伴。老伴诉"他好像变了一个人"。',
+    sections:[
+      {title:'Step 1：选择评估策略',question:'该老人的AD8得分为7分（仅"学习新事物"项阴性，因长期不使用新电器）。以下下一步行动中，最不恰当的是？',
+        options:[{text:'A. 完成MMSE评估认知损害程度',correct:false,feedback:'必要步骤。'},{text:'B. 完成GDS-15排除合并抑郁',correct:false,feedback:'必要步骤。痴呆患者常合并抑郁。'},{text:'C. 仅凭AD8=7分直接诊断阿尔茨海默病并开药',correct:true,feedback:'✅ 这是不恰当的做法。AD8是筛查工具，不能替代临床诊断。需要完整的认知评估、实验室检查（排除甲减、B12缺乏等可逆原因）和影像学检查。'}]},
+      {title:'Step 2：安全评估优先',question:'老人已走失2次。以下居家安全措施中，哪项是首要的？',
+        options:[{text:'A. 安装监控摄像头',correct:false,feedback:'监控是被动措施，不能防止走失发生。'},{text:'B. 佩戴GPS定位设备+门锁改为需钥匙才能从内打开+联系社区防走失平台登记',correct:true,feedback:'✅ 多重措施组合：定位设备可快速找回，门锁改造防止独自外出，社区登记确保护理人员知晓。'},{text:'C. 把老人锁在家里',correct:false,feedback:'❌ 这是限制人身自由，违反护理伦理。应有照护者陪伴外出。'}]},
+      {title:'Step 3：沟通策略',question:'老伴来照顾时，老人常因小事发怒（如找不到袜子就大喊大叫）。以下照护者应对策略中，最佳的是？',
+        options:[{text:'A. "冷静下来！袜子就在抽屉里，你怎么看不到？"',correct:false,feedback:'❌ 与认知障碍老人争辩只会加剧激越。他"看不到"不是故意的，是视觉空间处理能力下降。'},{text:'B. 不争辩，用平静语气说"我们一起找"，同时引导老人做另一件事转移注意力',correct:true,feedback:'✅ "接纳-转移-不争辩"是照护认知障碍老人的黄金法则。不争辩对错，用温和引导转移注意力。'},{text:'C. 不理他，让他自己冷静',correct:false,feedback:'忽视可能加剧老人的恐惧和不安。他需要的是陪伴和安全感，不是"冷处理"。'}]},
+      {title:'Step 4：制定照护计划',question:'为该老人制定长期照护计划，以下安排中最合理的是？',
+        options:[{text:'A. 老伴独自24小时照护',correct:false,feedback:'照护者几乎不可能独自承担中重度痴呆老人的24小时照护，会导致照护者耗竭。'},{text:'B. 日间照料中心+老伴照护+定期喘息服务+社区长期照护管理',correct:true,feedback:'✅ 多元化照护方案：日间照料中心提供白天的结构化活动，老伴负责晚间照护，定期喘息服务给照护者休息时间，社区管理确保资源对接。'},{text:'C. 立即入住养老机构，全权托付',correct:false,feedback:'并非所有家庭都需要或能够入住机构。先尝试社区支持+家庭照护组合，根据进展调整。'}]}
+    ]
+  },
+  {
+    id:3, title:'案例三：老年抑郁症（假性痴呆）', tag:'鉴别诊断', tagColor:'var(--risk-mid-bg)',tagText:'#8A6D20',
+    brief:'王某，女，72岁，中专文化。近3个月来反复诉说"记性不如以前了""脑子里一片空白"，不愿出门、食欲减退、消瘦4kg。但女儿观察：老人看电视时能准确记住剧情和人物关系。',
+    sections:[
+      {title:'Step 1：识别关键线索',question:'以下哪个线索最支持"抑郁症"而非"痴呆"的诊断方向？',
+        options:[{text:'A. 老人自己抱怨记忆力差',correct:false,feedback:'本人主动抱怨记忆力差，在抑郁症（假性痴呆）中比在真性痴呆中更常见，但单独这个线索不够。'},{text:'B. 3个月内急性起病 + 食欲减退消瘦 + 认知主诉与客观表现不符',correct:true,feedback:'✅ 三大典型特征：①急性起病（3个月而非数年）；②伴随抑郁躯体症状（食欲减退、体重下降）；③"认知主诉>客观表现"——抱怨严重但能记住电视剧剧情，这是假性痴呆的标志。'},{text:'C. 72岁高龄',correct:false,feedback:'高龄同时是痴呆和抑郁的风险因素，不具有鉴别意义。'}]},
+      {title:'Step 2：选择评估工具',question:'该老人最适合的初筛工具组合是？',
+        options:[{text:'A. 只做AD8',correct:false,feedback:'AD8只评估认知，无法筛查抑郁。需要联合情绪评估。'},{text:'B. AD8 + GDS-15 联合评估',correct:true,feedback:'✅ 认知和情绪联合评估是对这类主诉的标准操作流程。AD8评估认知变化（预期可能得分不高），GDS-15筛查抑郁（预期得分高）。两者对比即可揭示核心问题。'},{text:'C. 直接做头部MRI',correct:false,feedback:'影像学检查在初筛之后考虑，不是第一步。且MRI不能诊断抑郁症。'}]},
+      {title:'Step 3：解读结果',question:'该老人AD8=4分（整体认知、兴趣、记忆约定、学习新事物四项阳性），GDS-15=13分（重度抑郁范围）。最佳临床解释是？',
+        options:[{text:'A. 中度阿尔茨海默病合并抑郁',correct:false,feedback:'AD8=4分但临床表现与客观认知能力不符（能记住电视剧剧情），AD8得分可能受抑郁放大。不能直接下AD诊断。'},{text:'B. 老年抑郁症导致的可逆性认知下降（假性痴呆）',correct:true,feedback:'✅ GDS=13分（重度）+ 急性起病（3个月）+ 躯体症状（消瘦）+ 认知主诉>客观表现 = 假性痴呆的高概率诊断。先积极抗抑郁治疗，3个月后复查认知。如认知随情绪改善而改善，则确诊假性痴呆。'},{text:'C. 只是正常老化，不用处理',correct:false,feedback:'GDS=13分已达到重度抑郁范围，且体重下降4kg是明确的躯体警示信号，必须医疗干预。'}]},
+      {title:'Step 4：护理干预',question:'该老人的护理计划中，以下哪项最重要？',
+        options:[{text:'A. 每天做认知训练题',correct:false,feedback:'在抑郁未改善时，强迫认知训练可能适得其反——她会因表现不佳而更加沮丧。'},{text:'B. 抗抑郁治疗（药物+心理治疗）+ 营养支持 + 增加日间活动和社会接触 + 3个月后复测AD8和GDS',correct:true,feedback:'✅ 综合方案：①精神科抗抑郁治疗（SSRI类药物，老年人从小剂量开始）；②营养支持（体重下降4kg需关注）；③行为激活——从简单短时活动开始逐步增加；④规律随访，3个月后复测以确认认知改善。"先治抑郁，再看认知"。'},{text:'C. 告知家人"得了痴呆"，安排长期照护',correct:false,feedback:'❌ 没有确诊痴呆，给家属和老人贴"痴呆"标签会造成不必要的心理伤害和错误照护方向。'}]}
+    ]
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  currentPanel: 'home',
+  module: null, // 'ad8' | 'gds' | null
+  assessmentActive: false,
+  currentQuestion: -1,
+  currentStep: 'question',
+  answers: [],
+  totalScore: 0,
+  processingReply: false,
+  voiceListening: false,
+  speakerOn: true, // TTS enabled by default
+  recognition: null,
+  synth: window.speechSynthesis,
+  speaking: false
+};
+
+// ============================================================
+// PANEL NAVIGATION
+// ============================================================
+function switchPanel(name) {
+  // Stop any ongoing TTS when leaving chat panel
+  if (state.currentPanel === 'chat' && name !== 'chat' && state.synth) {
+    state.synth.cancel();
+  }
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+  const navItem = document.querySelector(`.nav-item[data-panel="${name}"]`);
+  if (navItem) navItem.classList.add('active');
+  state.currentPanel = name;
+  document.getElementById('mainContent').scrollTop = 0;
+}
+
+// ============================================================
+// MODULE ENTRY
+// ============================================================
+function startModule(type) {
+  state.module = type;
+  state.assessmentActive = true;
+  state.currentQuestion = -1;
+  state.currentStep = 'question';
+  state.answers = [];
+  state.totalScore = 0;
+  state.processingReply = false;
+
+  switchPanel('chat');
+  document.getElementById('chatMessages').innerHTML = '';
+  document.getElementById('quickReplies').innerHTML = '';
+
+  if (type === 'ad8') {
+    addMessage('ai', `👋 您好！欢迎使用<strong>AD8认知筛查</strong>教学练习。\n\n我将逐题询问您与一年前相比在8个领域的变化情况。请根据实际情况回答——您也可以把这次对话当作角色扮演：<strong>假如您是一位社区老人，面对护理人员的问询</strong>。\n\n共8题，约3-5分钟。我们开始吧。`);
+    setTimeout(() => { state.currentQuestion = 0; askAD8(0); }, 800);
+  } else if (type === 'gds') {
+    addMessage('ai', `👋 您好！欢迎使用<strong>GDS-15老年抑郁量表</strong>教学练习。\n\nGDS-15是专为老年人设计的情绪筛查工具，共15题。与AD8不同——GDS-15直接询问近一周的感受，而非"与一年前相比"。\n\n<strong>教学要点</strong>：注意区分"情绪问题"和"认知问题"——许多老人以记忆差为主诉就诊，实际是抑郁症。\n\n共15题，约5-8分钟。开始吧。`);
+    setTimeout(() => { state.currentQuestion = 0; askGDS(0); }, 800);
+  }
+}
+
+// ============================================================
+// AD8 FLOW
+// ============================================================
+function askAD8(index) {
+  if (index >= AD8_QUESTIONS.length) { finishModule(); return; }
+  const q = AD8_QUESTIONS[index];
+  state.currentQuestion = index;
+  state.currentStep = 'question';
+  addMessage('ai', `（第${index+1}/8题 · ${q.domain}）\n\n${q.question}`);
+  showQuickReplies(['是，有变化', '没有明显变化', '不确定/说不清']);
+}
+
+function askGDS(index) {
+  if (index >= GDS_QUESTIONS.length) { finishModule(); return; }
+  const q = GDS_QUESTIONS[index];
+  state.currentQuestion = index;
+  state.currentStep = 'question';
+  const label = q.reverse ? '（注意：本题为反向计分）' : '';
+  addMessage('ai', `（第${index+1}/15题 · ${q.domain}）${label}\n\n${q.text}`);
+  showQuickReplies(['是', '否']);
+}
+
+// ============================================================
+// QUICK REPLIES
+// ============================================================
+function showQuickReplies(options) {
+  const container = document.getElementById('quickReplies');
+  container.innerHTML = options.map((opt, i) => {
+    const safeOpt = opt.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return `<button class="quick-reply" id="qr-${i}" onclick="handleReply(this,'${safeOpt}',${i})">${opt}</button>`;
+  }).join('');
+}
+
+function disableQuickReplies() {
+  document.querySelectorAll('.quick-reply').forEach(b => b.disabled = true);
+}
+
+function handleReply(btnEl, text, index) {
+  // GUARD: prevent double-processing
+  if (state.processingReply) return;
+  state.processingReply = true;
+  disableQuickReplies();
+
+  // Remove quick replies
+  document.getElementById('quickReplies').innerHTML = '';
+  addMessage('user', text);
+
+  if (state.module === 'ad8') processAD8Reply(text, index);
+  else if (state.module === 'gds') processGDSReply(text, index);
+
+  // Reset guard after a short delay
+  setTimeout(() => { state.processingReply = false; }, 300);
+}
+
+function processAD8Reply(text, index) {
+  const q = AD8_QUESTIONS[state.currentQuestion];
+  if (state.currentStep === 'question') {
+    const isYes = index === 0;
+    const isUncertain = index === 2;
+    state.answers.push({qid:q.id, domain:q.domain, answer:text, isPositive:isYes, isUncertain:isUncertain});
+    if (isYes) {
+      state.currentStep = 'followup';
+      setTimeout(() => { addMessage('ai', q.followup); showQuickReplies(['能举个例子', '说不太清楚具体例子', '跳过这个问题']); }, 500);
+    } else {
+      moveToNextAD8();
+    }
+  } else if (state.currentStep === 'followup') {
+    const last = state.answers[state.answers.length-1];
+    last.followupAnswer = text;
+    last.hasDetail = index === 0;
+    if (last.isPositive) state.totalScore += 1;
+    moveToNextAD8();
+  }
+}
+
+function processGDSReply(text, index) {
+  const q = GDS_QUESTIONS[state.currentQuestion];
+  const answeredYes = index === 0; // "是" = index 0
+  let score = 0;
+  if (q.reverse) {
+    // Reverse: "否" = depression point
+    if (!answeredYes) score = 1;
+  } else {
+    // Normal: "是" = depression point
+    if (answeredYes) score = 1;
+  }
+  state.totalScore += score;
+  state.answers.push({qid:q.id, domain:q.domain, answer:text, score:score, isDepressive:score===1});
+  moveToNextGDS();
+}
+
+function moveToNextAD8() {
+  const next = state.currentQuestion + 1;
+  if (next >= AD8_QUESTIONS.length) {
+    setTimeout(() => finishModule(), 600);
+  } else {
+    state.currentQuestion = next;
+    state.currentStep = 'question';
+    setTimeout(() => askAD8(next), 400);
+  }
+}
+
+function moveToNextGDS() {
+  const next = state.currentQuestion + 1;
+  if (next >= GDS_QUESTIONS.length) {
+    setTimeout(() => finishModule(), 600);
+  } else {
+    state.currentQuestion = next;
+    state.currentStep = 'question';
+    setTimeout(() => askGDS(next), 400);
+  }
+}
+
+// ============================================================
+// TEXT INPUT
+// ============================================================
+function sendText() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  if (state.assessmentActive && state.currentQuestion >= 0) {
+    // Let handleReply add the user message — avoid double display
+    disableQuickReplies();
+    document.getElementById('quickReplies').innerHTML = '';
+    const t = text.toLowerCase();
+    let idx = 2;
+    if (t.includes('是')||t.includes('有')||t.includes('对')||t.includes('yes')||t.includes('会')) idx = 0;
+    else if (t.includes('没有')||t.includes('没')||t.includes('否')||t.includes('不')||t.includes('no')) idx = 1;
+    handleReply(null, text, idx);
+  } else {
+    // Not in assessment — just display the message
+    addMessage('user', text);
+  }
+}
+
+// ============================================================
+// FINISH MODULE
+// ============================================================
+function finishModule() {
+  state.assessmentActive = false;
+  state.currentQuestion = -1;
+  document.getElementById('quickReplies').innerHTML = '';
+
+  const score = state.totalScore;
+  const type = state.module;
+  let html = '';
+  const historyType = type === 'ad8' ? 'AD8' : 'GDS-15';
+
+  if (type === 'ad8') {
+    html = buildAD8Results(score);
+    saveResult('AD8', score, score<=1?'低风险':score<=3?'中风险':'高风险');
+  } else if (type === 'gds') {
+    html = buildGDSResults(score);
+    const r = getGDSResult(score);
+    saveResult('GDS-15', score, r.label);
+  }
+
+  addMessage('ai', `✅ 测评完成！\n\n您的<strong>${historyType}</strong>得分为 <strong>${score}${type==='ad8'?'/8':''}分</strong>。详细结果和建议请查看下方。`);
+  setTimeout(() => {
+    document.getElementById('resultsContent').innerHTML = html;
+    switchPanel('results');
+    document.getElementById('mainContent').scrollTop = 0;
+  }, 800);
+}
+
+function buildAD8Results(score) {
+  let riskLevel, riskLabel, riskClass, adviceHTML, emoji;
+  if (score <= 1) {
+    riskLevel='low'; riskLabel='低风险'; riskClass='low'; emoji='🟢';
+    adviceHTML = `<div class="advice-section"><h4>💡 护理建议</h4><ul><li>保持健康生活方式：规律运动（每周≥150分钟）、MIND饮食、充足睡眠</li><li>保持社交活跃：社区活动、亲友联络</li><li>认知储备训练：阅读、学习新技能、益智活动</li><li>控制血管危险因素：定期监测血压、血糖、血脂</li></ul></div><div class="advice-section"><h4>⏰ 复查周期</h4><ul><li>每年自测一次，或遵医嘱</li></ul></div>`;
+  } else if (score <= 3) {
+    riskLevel='mid'; riskLabel='中风险'; riskClass='mid'; emoji='🟡';
+    adviceHTML = `<div class="advice-section"><h4>⚠️ 解读</h4><ul><li>AD8≥2分提示存在轻度认知变化，建议进一步评估</li></ul></div><div class="advice-section"><h4>💡 护理建议</h4><ul><li>1-2周内到神经内科或记忆门诊做MMSE/MoCA评估</li><li>排查可逆原因：甲功、B12、药物副作用、抑郁</li><li>知情家属陪同就诊</li><li>建立健康日志记录认知波动</li><li>请医生审查当前用药</li></ul></div><div class="advice-section"><h4>⏰ 复查周期</h4><ul><li>1-3个月内复测，或遵医嘱</li></ul></div>`;
+  } else {
+    riskLevel='high'; riskLabel='高风险'; riskClass='high'; emoji='🔴';
+    adviceHTML = `<div class="advice-section"><h4>🚨 解读</h4><ul><li>AD8≥4分提示认知障碍可能性显著升高</li></ul></div><div class="advice-section"><h4>💡 优先行动</h4><ul><li>🔴 <strong>尽快（1周内）到记忆门诊或神经内科就诊</strong></li><li>知情家属陪同，提供完整功能变化信息</li><li>安全评估：居家环境（燃气、防跌倒、用药管理）</li><li>法律事务提前规划：医疗委托、财产管理</li><li>对接社区长期照护管理中心</li><li>早期非药物干预（认知训练、怀旧疗法）可延缓功能下降</li></ul></div><div class="advice-section"><h4>⏰ 复查周期</h4><ul><li>遵医嘱复测；教学场景每学期追踪一次</li></ul></div>`;
+  }
+
+  const history = getHistory().filter(h => h.type === 'AD8');
+  let trendHTML = '';
+  if (history.length >= 2) {
+    const prev = history[history.length-2];
+    const diff = score - prev.score;
+    let arrow='→', arrowClass='same', desc='持平';
+    if (diff<0){arrow='↓';arrowClass='down';desc=`改善了${Math.abs(diff)}分`;}
+    else if(diff>0){arrow='↑';arrowClass='up';desc=`升高了${diff}分`;}
+    trendHTML = `<div class="trend-box"><h4>📊 纵向对比</h4><div class="trend-row"><span>上次</span><span class="val">${prev.score}/8分（${prev.date}）</span></div><div class="trend-row"><span>本次</span><span class="val">${score}/8分</span></div><div class="trend-row"><span>趋势</span><span class="val"><span class="trend-arrow ${arrowClass}">${arrow}</span> ${desc}</span></div><div class="trend-row"><span>累计</span><span class="val">第${history.length}次</span></div><p style="font-size:0.75rem;color:var(--text-light);margin-top:8px">【教学提示】得分变化≥2分时需关注；单次波动可能受临时因素影响。</p></div>`;
+  }
+
+  return `<div class="results-card"><div class="result-header"><div style="font-size:2.5rem">${emoji}</div><div class="result-score" style="color:var(--risk-${riskClass})">${score}<span style="font-size:1.2rem;color:var(--text-light)">/8分</span></div><span class="risk-badge ${riskClass}">${riskLabel}</span><div class="result-label">AD8认知筛查评估结果</div></div>${adviceHTML}${trendHTML}<div style="font-size:0.7rem;color:var(--text-light);text-align:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--border-light)">⚠️ 本结果由教学智能体自动生成，不构成医学诊断</div></div>`;
+}
+
+function buildGDSResults(score) {
+  const r = getGDSResult(score);
+  const adviceHTML = `<div class="advice-section"><h4>💡 护理建议</h4><ul>${r.advice.map(a=>'<li>'+a+'</li>').join('')}</ul></div><div class="advice-section"><h4>⏰ 复查建议</h4><ul><li>${r.followup}</li></ul></div>`;
+  const history = getHistory().filter(h => h.type === 'GDS-15');
+  let trendHTML = '';
+  if (history.length >= 2) {
+    const prev = history[history.length-2];
+    const diff = score - prev.score;
+    let arrow='→', arrowClass='same', desc='持平';
+    if (diff<0){arrow='↓';arrowClass='down';desc=`改善了${Math.abs(diff)}分`;}
+    else if(diff>0){arrow='↑';arrowClass='up';desc=`升高了${diff}分`;}
+    trendHTML = `<div class="trend-box"><h4>📊 纵向对比</h4><div class="trend-row"><span>上次</span><span class="val">${prev.score}分（${prev.date}）</span></div><div class="trend-row"><span>本次</span><span class="val">${score}分</span></div><div class="trend-row"><span>趋势</span><span class="val"><span class="trend-arrow ${arrowClass}">${arrow}</span> ${desc}</span></div><div class="trend-row"><span>累计</span><span class="val">第${history.length}次</span></div></div>`;
+  }
+  return `<div class="results-card"><div class="result-header"><div style="font-size:2.5rem">${r.emoji}</div><div class="result-score" style="color:var(--risk-${r.cls})">${score}<span style="font-size:1.2rem;color:var(--text-light)">/15分</span></div><span class="risk-badge ${r.cls}">${r.label}</span><div class="result-label">${r.desc}</div></div>${adviceHTML}${trendHTML}<div style="font-size:0.7rem;color:var(--text-light);text-align:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--border-light)">⚠️ 本结果由教学智能体自动生成，不构成医学诊断</div></div>`;
+}
+
+function restartModule() {
+  const type = state.module;
+  state.assessmentActive = false;
+  state.currentQuestion = -1;
+  state.currentStep = 'question';
+  state.answers = [];
+  state.totalScore = 0;
+  state.processingReply = false;
+  document.getElementById('chatMessages').innerHTML = '';
+  document.getElementById('quickReplies').innerHTML = '';
+  if (type) startModule(type);
+}
+
+// ============================================================
+// CHAT UI
+// ============================================================
+function addMessage(role, html) {
+  const container = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+  const msgId = 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2,4);
+  // Clean HTML: convert \n to <br> for display
+  const displayHtml = html.replace(/\n/g, '<br>');
+  div.innerHTML = `
+    <div class="msg-avatar">${role === 'ai' ? '🧠' : '👤'}</div>
+    <div class="msg-bubble" id="${msgId}">
+      ${displayHtml}
+      ${role === 'ai' ? '<button class="msg-speaker-btn" title="朗读此条" onclick="event.stopPropagation();speakMessage(\''+msgId+'\')">🔊</button>' : ''}
+    </div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+
+  // Auto-speak if speaker is on and it's an AI message
+  if (role === 'ai' && state.speakerOn) {
+    speakText(html.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ''));
+  }
+}
+
+// ============================================================
+// VOICE: Speech Recognition (input)
+// ============================================================
+function toggleVoice() {
+  if (state.voiceListening) { stopVoice(); return; }
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert('您的浏览器不支持语音识别。请使用Chrome浏览器，或通过手机端访问。\n\n提示：语音识别需要HTTPS或localhost环境。');
+    return;
+  }
+
+  // Check if running in secure context
+  if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    alert('语音识别需要HTTPS安全连接。\n\n当前访问方式不支持语音功能。部署到HTTPS服务器后此功能即可使用。');
+    return;
+  }
+
+  state.recognition = new SpeechRecognition();
+  state.recognition.lang = 'zh-CN';
+  state.recognition.interimResults = false;
+  state.recognition.continuous = false;
+
+  state.recognition.onstart = () => {
+    state.voiceListening = true;
+    const btn = document.getElementById('voiceBtn');
+    btn.classList.add('listening');
+    btn.textContent = '🔴';
+    document.getElementById('voiceStatus').classList.add('show');
+  };
+
+  state.recognition.onresult = (event) => {
+    const text = event.results[0][0].transcript;
+    document.getElementById('chatInput').value = text;
+    stopVoice();
+    setTimeout(() => sendText(), 300);
+  };
+
+  state.recognition.onerror = (e) => {
+    stopVoice();
+    if (e.error === 'not-allowed') {
+      alert('麦克风权限未授予。请在浏览器设置中允许麦克风访问。');
+    } else if (e.error === 'network') {
+      alert('语音识别需要网络连接。请检查网络后重试。');
+    } else {
+      alert('语音识别失败（' + e.error + '）。请使用文字输入。');
+    }
+  };
+
+  state.recognition.onend = () => { stopVoice(); };
+  state.recognition.start();
+}
+
+function stopVoice() {
+  state.voiceListening = false;
+  const btn = document.getElementById('voiceBtn');
+  btn.classList.remove('listening');
+  btn.textContent = '🎤';
+  document.getElementById('voiceStatus').classList.remove('show');
+  if (state.recognition) {
+    try { state.recognition.stop(); } catch(e) {}
+    state.recognition = null;
+  }
+}
+
+// ============================================================
+// VOICE: Speech Synthesis (output) - TTS
+// ============================================================
+function toggleSpeaker() {
+  state.speakerOn = !state.speakerOn;
+  const btn = document.getElementById('speakerToggle');
+  if (state.speakerOn) {
+    btn.textContent = '🔊';
+    btn.title = '语音播报：开启';
+    btn.style.background = 'var(--primary-light)';
+  } else {
+    btn.textContent = '🔇';
+    btn.title = '语音播报：关闭';
+    btn.style.background = '#f0f0f0';
+    // Stop any ongoing speech
+    if (state.synth) state.synth.cancel();
+  }
+}
+
+function speakText(text) {
+  if (!state.speakerOn || !state.synth) return;
+
+  // Cancel any ongoing speech
+  state.synth.cancel();
+
+  // Clean text
+  const cleanText = text.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, '').replace(/\s+/g, ' ').trim();
+  if (!cleanText || cleanText.length < 2) return;
+
+  // Split long text into chunks for better TTS
+  const maxChunk = 150;
+  const chunks = [];
+  let remaining = cleanText;
+  while (remaining.length > 0) {
+    if (remaining.length <= maxChunk) {
+      chunks.push(remaining);
+      break;
+    }
+    // Find a good break point
+    let breakAt = remaining.lastIndexOf('。', maxChunk);
+    if (breakAt === -1) breakAt = remaining.lastIndexOf('，', maxChunk);
+    if (breakAt === -1 || breakAt < 30) breakAt = maxChunk;
+    chunks.push(remaining.substring(0, breakAt + 1));
+    remaining = remaining.substring(breakAt + 1);
+  }
+
+  // Speak chunks sequentially
+  let idx = 0;
+  function speakNext() {
+    if (idx >= chunks.length || !state.speakerOn) return;
+    const utterance = new SpeechSynthesisUtterance(chunks[idx]);
+    utterance.lang = 'zh-CN';
+    utterance.rate = 0.9; // Slightly slower for elderly-friendly pace
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    // Try to find a good Chinese voice
+    const voices = state.synth.getVoices();
+    const zhVoice = voices.find(v => v.lang.startsWith('zh-CN') || v.lang.startsWith('zh-TW') || v.lang.startsWith('zh-HK'));
+    if (zhVoice) utterance.voice = zhVoice;
+
+    utterance.onend = () => { idx++; speakNext(); };
+    utterance.onerror = () => { idx++; speakNext(); };
+
+    state.synth.speak(utterance);
+  }
+  speakNext();
+}
+
+function speakMessage(msgId) {
+  const el = document.getElementById(msgId);
+  if (!el) return;
+  // Get text content excluding the speaker button
+  const clone = el.cloneNode(true);
+  const btn = clone.querySelector('.msg-speaker-btn');
+  if (btn) btn.remove();
+  const text = clone.textContent || clone.innerText || '';
+  state.speakerOn = true;
+  document.getElementById('speakerToggle').textContent = '🔊';
+  document.getElementById('speakerToggle').style.background = 'var(--primary-light)';
+  speakText(text);
+}
+
+// Preload voices
+if (window.speechSynthesis) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+}
+
+// ============================================================
+// CASE STUDIES
+// ============================================================
+function loadCases() {
+  const container = document.getElementById('caseList');
+  container.innerHTML = CASE_DATA.map((c, i) => `
+    <div class="case-card" onclick="toggleCase(${i})" id="case-${i}">
+      <div class="case-header">
+        <span class="case-title">${c.title}</span>
+        <span class="case-tag" style="background:${c.tagColor};color:${c.tagText}">${c.tag}</span>
+      </div>
+      <div class="case-brief">${c.brief}</div>
+      <div class="case-detail" id="caseDetail-${i}"></div>
+    </div>
+  `).join('');
+}
+
+function toggleCase(index) {
+  const detail = document.getElementById('caseDetail-' + index);
+  const isOpen = detail.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.case-detail').forEach(d => d.classList.remove('open'));
+
+  if (!isOpen) {
+    // Build detail
+    const c = CASE_DATA[index];
+    detail.innerHTML = c.sections.map((s, si) => `
+      <div class="case-step" id="case${index}-step${si}">
+        <h5>${s.title}</h5>
+        <p>${s.question}</p>
+        <div class="options">${s.options.map((o, oi) => `
+          <button class="opt-btn" id="case${index}-s${si}-o${oi}" onclick="checkCaseAnswer(${index},${si},${oi})">${o.text}</button>
+        `).join('')}</div>
+        <div class="case-feedback" id="case${index}-fb${si}"></div>
+      </div>
+    `).join('');
+    detail.classList.add('open');
+  }
+}
+
+function checkCaseAnswer(caseIdx, stepIdx, optIdx) {
+  const c = CASE_DATA[caseIdx];
+  const s = c.sections[stepIdx];
+  const opt = s.options[optIdx];
+
+  // Disable all option buttons for this step
+  const stepEl = document.getElementById(`case${caseIdx}-step${stepIdx}`);
+  stepEl.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+  // Mark correct/wrong
+  s.options.forEach((o, i) => {
+    const btn = document.getElementById(`case${caseIdx}-s${stepIdx}-o${i}`);
+    if (o.correct) btn.classList.add('correct');
+    else if (i === optIdx && !o.correct) btn.classList.add('wrong');
+  });
+
+  // Show feedback
+  const fb = document.getElementById(`case${caseIdx}-fb${stepIdx}`);
+  fb.textContent = opt.feedback;
+  fb.className = 'case-feedback show ' + (opt.correct ? 'good' : 'bad');
+}
+
+// ============================================================
+// FAQ
+// ============================================================
+function showFAQ() {
+  const container = document.getElementById('faqList');
+  container.innerHTML = FAQ_DATA.map((item, i) => `
+    <div class="faq-item" onclick="toggleFAQ(${i})" id="faq-${i}">
+      <div class="faq-q"><span class="q-icon">Q${i+1}</span>${item.q}</div>
+      <div class="faq-a">${item.a}</div>
+    </div>
+  `).join('');
+}
+function toggleFAQ(i) { document.getElementById('faq-'+i).classList.toggle('active'); }
+function filterFAQ() {
+  const q = document.getElementById('faqSearch').value.trim().toLowerCase();
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(q) ? 'block' : 'none';
+  });
+}
+
+// ============================================================
+// HISTORY + LOCAL STORAGE
+// ============================================================
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('brain_health_history') || '[]'); }
+  catch(e) { return []; }
+}
+function saveResult(type, score, label) {
+  const h = getHistory();
+  const now = new Date();
+  h.push({
+    type, score, label,
+    date: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`,
+    details: state.answers.map(a => ({domain:a.domain, answer:a.answer, isPositive:a.isPositive||a.isDepressive||false}))
+  });
+  localStorage.setItem('brain_health_history', JSON.stringify(h.length > 100 ? h.slice(-100) : h));
+}
+function loadHistory() {
+  const container = document.getElementById('historyContent');
+  const h = getHistory();
+  if (!h.length) {
+    container.innerHTML = '<div class="history-empty"><div style="font-size:3rem;margin-bottom:12px">📭</div><p>暂无测评记录</p><p style="font-size:0.8rem">完成AD8或GDS-15测评后，记录将自动保存在此</p></div>';
+    return;
+  }
+  container.innerHTML = '<div class="history-list">' + h.slice().reverse().map(r => `
+    <div class="history-item">
+      <div>
+        <div class="history-date">${r.date}</div>
+        <span class="history-type" style="background:var(--primary-light);color:var(--primary-dark)">${r.type}</span>
+        <div style="font-size:0.75rem;color:var(--text-med);margin-top:2px">${(r.details||[]).filter(d=>d.isPositive).map(d=>d.domain).join('、')||'无阳性条目'}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="history-score" style="color:${r.type==='AD8'?(r.score<=1?'var(--risk-low)':r.score<=3?'var(--risk-mid)':'var(--risk-high)'):(r.score<=4?'var(--risk-low)':r.score<=8?'var(--risk-mid)':r.score<=11?'var(--risk-mid)':'var(--risk-high)')}">${r.score}${r.type==='AD8'?'/8':''}</div>
+        <span class="history-risk" style="font-size:0.7rem">${r.label}</span>
+      </div>
+    </div>
+  `).join('') + '</div>';
+}
+function clearHistory() {
+  if (confirm('确定要清除所有历史测评记录吗？此操作不可撤销。')) {
+    localStorage.removeItem('brain_health_history');
+    loadHistory();
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+switchPanel('home');
+</script>
+</body>
+</html>

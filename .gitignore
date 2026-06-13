@@ -1,0 +1,12 @@
+node_modules/
+MCI 健康咨询助手_files/
+package-lock.json
+package.json
+create_docx.js
+*.docx
+AI产品硬技能展示*.md
+我的简历(1).pdf
+作品集.html
+MCI 健康咨询助手.html
+认知健康筛查-移动端原型图.html
+*.tmp

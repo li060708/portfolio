@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李珂 · AI医疗产品实习生</title>
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --navy:#1B3A5C;
+  --navy-dark:#0F2440;
+  --navy-light:#F0F4F8;
+  --orange:#D4783C;
+  --orange-light:#FEF7F2;
+  --bg:#FAFBFC;
+  --surface:#FFFFFF;
+  --text:#1C2024;
+  --text2:#5B6C7E;
+  --text3:#8F9EB2;
+  --border:#E6ECF2;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 2px 12px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.06);
+  --radius:12px;
+  --radius-sm:8px;
+  --font:system-ui,-apple-system,"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+}
+
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:var(--font);color:var(--text);background:var(--bg);
+  line-height:1.7;-webkit-font-smoothing:antialiased;letter-spacing:0.01em;
+}
+
+/* ===== LAYOUT ===== */
+.sec{padding:80px 24px}
+.sec--tint{background:var(--navy-light)}
+.sec--dark{background:var(--navy);color:#fff}
+.wrap{max-width:700px;margin:0 auto}
+
+/* ===== SECTION HEADERS ===== */
+.sec-label{font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
+.sec--dark .sec-label{color:rgba(255,255,255,0.5)}
+.sec-title{font-size:1.8rem;font-weight:800;letter-spacing:-0.3px;margin-bottom:8px;line-height:1.3}
+.sec--dark .sec-title{color:#fff}
+.sec-sub{font-size:0.95rem;color:var(--text2);margin-bottom:48px;max-width:500px;line-height:1.7}
+.sec--dark .sec-sub{color:rgba(255,255,255,0.6)}
+.sec-line{width:36px;height:3px;background:var(--orange);border-radius:2px;margin-bottom:40px}
+
+/* ===== COVER ===== */
+.cover{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;
+  background:linear-gradient(170deg,#F6F9FC 0%,#F0F4F8 40%,#EAF0F6 100%);
+  padding:60px 24px;position:relative;overflow:hidden;
+}
+.cover::after{
+  content:'';position:absolute;top:-20%;right:-15%;
+  width:600px;height:600px;background:radial-gradient(circle,rgba(27,58,92,0.03) 0%,transparent 70%);
+  border-radius:50%;pointer-events:none;
+}
+.cover-inner{position:relative;z-index:1}
+.cover-tag{
+  display:inline-block;padding:5px 20px;
+  border:1.5px solid rgba(212,120,60,0.3);border-radius:20px;
+  font-size:0.72rem;letter-spacing:4px;color:var(--orange);margin-bottom:32px;
+}
+.cover-name{font-size:3rem;font-weight:800;letter-spacing:6px;color:var(--text);margin-bottom:4px}
+.cover-role{font-size:1.1rem;font-weight:500;color:var(--navy);letter-spacing:3px;margin-bottom:40px}
+.cover-line{width:50px;height:2px;background:var(--orange);margin:0 auto 36px;border-radius:1px}
+.cover-contact{display:flex;gap:32px;flex-wrap:wrap;justify-content:center;font-size:0.88rem;color:var(--text2)}
+.cover-contact span{display:inline-flex;align-items:center;gap:6px}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--surface);border-radius:var(--radius);
+  border:1px solid var(--border);padding:32px;margin-bottom:20px;
+}
+.card-title{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.card-subtitle{font-size:0.85rem;color:var(--text2);margin-bottom:16px;line-height:1.6}
+
+/* ===== KPI ROW ===== */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:8px 0}
+.kpi{
+  text-align:center;padding:20px 12px;background:var(--surface);
+  border-radius:var(--radius);border:1px solid var(--border);
+  transition:box-shadow 0.2s,transform 0.2s;
+}
+.kpi:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.kpi-num{font-size:1.6rem;font-weight:800;color:var(--navy);line-height:1.2;margin-bottom:4px}
+.kpi-label{font-size:0.75rem;color:var(--text2);line-height:1.4}
+.kpi--warm .kpi-num{color:var(--orange)}
+
+/* ===== TABLES ===== */
+.tbl-wrap{overflow-x:auto;margin:12px 0;border-radius:var(--radius-sm);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:0.85rem}
+thead{background:var(--navy-light)}
+thead th{padding:10px 14px;text-align:left;font-weight:700;font-size:0.76rem;color:var(--navy);letter-spacing:0.3px;white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--navy-light)}
+.tbl-note{font-size:0.75rem;color:var(--text3);margin-top:6px}
+
+/* ===== TAGS ===== */
+.tag-row{display:flex;flex-wrap:wrap;gap:8px}
+.tag{
+  padding:5px 14px;background:var(--navy-light);color:var(--navy);
+  border-radius:20px;font-size:0.8rem;font-weight:600;
+}
+
+/* ===== ARCHITECTURE ===== */
+.arch{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.arch-row{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 16px;background:var(--navy-light);border-radius:var(--radius-sm);
+  border-left:3px solid var(--navy);
+}
+.arch-label{font-weight:700;font-size:0.76rem;color:var(--navy);min-width:64px;padding-top:3px}
+.arch-tags{display:flex;flex-wrap:wrap;gap:6px}
+.arch-tag{
+  padding:3px 10px;background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;font-size:0.76rem;color:var(--text);
+}
+
+/* ===== PROMPT COMPARE ===== */
+.prompt-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.prompt-box{border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border)}
+.prompt-box-head{padding:8px 14px;font-weight:700;font-size:0.78rem;text-align:center}
+.prompt-box-head--old{background:#F1F4F7;color:var(--text3)}
+.prompt-box-head--new{background:var(--navy);color:#fff}
+.prompt-box-body{padding:16px;font-size:0.82rem;line-height:1.8;max-height:340px;overflow-y:auto;background:var(--surface);color:var(--text2)}
+
+/* ===== PROTO EMBED ===== */
+.proto-wrap{margin:16px 0;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.proto-header{padding:10px 16px;background:var(--navy-light);font-size:0.8rem;font-weight:700;color:var(--navy)}
+.proto-wrap iframe{width:100%;height:540px;border:none;display:block;background:#fff}
+
+/* ===== CERT GRID ===== */
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.cert-item{
+  display:flex;align-items:center;gap:10px;padding:14px 16px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);font-size:0.84rem;font-weight:600;
+  color:var(--text);transition:box-shadow 0.2s;
+}
+.cert-item:hover{box-shadow:var(--shadow-md)}
+.cert-icon{font-size:1.3rem;flex-shrink:0}
+
+/* ===== PROS/CONS ===== */
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+@media(max-width:600px){.pros-cons{grid-template-columns:1fr}}
+.pros,.cons{padding:16px;border-radius:var(--radius-sm);font-size:0.83rem;line-height:1.7}
+.pros{background:#EDF7F2;border-left:3px solid #2E7D64}
+.cons{background:#FEF5EE;border-left:3px solid var(--orange)}
+.pros h4,.cons h4{font-size:0.85rem;margin-bottom:8px}
+.pros ul,.cons ul{padding-left:18px;color:var(--text2)}
+.pros li,.cons li{margin-bottom:4px}
+
+/* ===== BACK COVER ===== */
+.back-cover{
+  min-height:40vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;background:var(--navy-light);padding:60px 24px;
+}
+.back-cover h2{font-size:1.6rem;color:var(--navy);margin-bottom:12px}
+.back-cover p{color:var(--text2);margin-bottom:24px;line-height:2}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:10px 22px;
+  border-radius:20px;font-size:0.85rem;font-weight:600;text-decoration:none;
+  transition:all 0.2s;cursor:pointer;border:none;
+}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:var(--navy-dark);box-shadow:0 4px 12px rgba(27,58,92,0.25)}
+.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn-outline:hover{background:var(--navy-light)}
+.btn-accent{background:var(--orange);color:#fff}
+.btn-accent:hover{background:#C06A2E;box-shadow:0 4px 12px rgba(212,120,60,0.25)}
+
+/* ===== FOOTER ===== */
+.footer{text-align:center;padding:16px;font-size:0.7rem;color:var(--text3);background:var(--surface);border-top:1px solid var(--border)}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease,transform 0.5s ease}
+.reveal.on{opacity:1;transform:translateY(0)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:640px){
+  html{font-size:15px}
+  .sec{padding:56px 16px}
+  .cover-name{font-size:2.2rem;letter-spacing:3px}
+  .cover-role{font-size:0.95rem}
+  .cover-contact{flex-direction:column;gap:8px}
+  .prompt-grid{grid-template-columns:1fr}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .cert-grid{grid-template-columns:1fr 1fr}
+}
+@media print{
+  .sec{padding:24px 0;page-break-inside:avoid}
+  body{font-size:11px}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER ==================== -->
+<section class="cover">
+<div class="cover-inner">
+<div class="cover-tag">PORTFOLIO 2026</div>
+<h1 class="cover-name">李 珂</h1>
+<p class="cover-role">AI 医疗产品方向 · 实习求职</p>
+<div class="cover-line"></div>
+<div class="cover-contact">
+<span>18779007929</span>
+<span>like1002025@163.com</span>
+</div>
+</div>
+</section>
+
+<!-- ==================== 01 个人简介 ==================== -->
+<section class="sec" id="profile">
+<div class="wrap">
+<div class="sec-label">01 / Profile</div>
+<h2 class="sec-title">个人简介</h2>
+<p class="sec-sub">护理学背景 × AI产品实践 · 关注医药数据与AI应用的交叉领域</p>
+<div class="sec-line"></div>
+
+<div class="kpi-row reveal">
+<div class="kpi"><div class="kpi-num">省级大创</div><div class="kpi-label">负责人</div></div>
+<div class="kpi"><div class="kpi-num">GCP</div><div class="kpi-label">药物临床试验证书</div></div>
+<div class="kpi"><div class="kpi-num">CHIMA Top10</div><div class="kpi-label">13.6万票决赛入围</div></div>
+<div class="kpi kpi--warm"><div class="kpi-num">5项</div><div class="kpi-label">省级以上竞赛获奖</div></div>
+</div>
+
+<div class="tag-row reveal" style="margin-top:20px">
+<span class="tag">需求分析</span><span class="tag">竞品分析</span><span class="tag">PRD撰写</span>
+<span class="tag">原型设计</span><span class="tag">Prompt工程</span><span class="tag">AI评测</span>
+<span class="tag">SPSS</span><span class="tag">文献调研</span><span class="tag">产品路线图</span>
+</div>
+
+<div class="card reveal" style="margin-top:28px">
+<p style="font-size:0.92rem;color:var(--text2);line-height:2">
+<strong style="color:var(--navy)">护理学专业让我天然理解临床场景与医患需求。</strong>在校期间，我以项目负责人的身份主导了省级大创课题，在CHIMA全国医学信息科普竞赛中带领团队进入决赛前十——这些经历让我学会了从用户真实痛点出发思考产品逻辑。<br><br>
+我对<strong style="color:var(--orange)">医药数据产品</strong>方向有浓厚兴趣。在自学过程中，我系统研究了国内主流医药数据平台（医药魔方、药智网、IQVIA等）的产品策略与能力边界，并通过搭建AI健康咨询智能体，实践了从评测集设计到Prompt优化的完整AI产品迭代闭环。<br><br>
+我希望加入一支务实的产品团队，把临床视角转化为可落地的产品方案。
+</p>
+</div>
+</div>
+</section>
+
+<!-- ==================== 02 医药行业产品分析 ==================== -->
+<section class="sec sec--tint" id="research">
+<div class="wrap">
+<div class="sec-label">02 / Industry Research</div>
+<h2 class="sec-title">医药数据产品分析</h2>
+<p class="sec-sub">对标JD desk research要求 · 三家主流医药数据平台的深度对比</p>
+<div class="sec-line"></div>
+
+<div class="card reveal">
+<div class="card-title">研究背景与方法</div>
+<p style="color:var(--text2);font-size:0.9rem;line-height:1.9">
+随着AI技术在医药领域的加速渗透，医药数据产品正从「信息查询工具」向「AI驱动的决策引擎」演进。我选取了<strong>医药魔方、药智网、IQVIA</strong>三个代表性平台，从产品定位、核心功能、数据源、商业模式、AI能力五个维度进行结构化分析，以建立对医药数据产品赛道的系统认知。
+</p>
+</div>
+
+<div class="card reveal">
+<div class="card-title">平台概览</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>维度</th><th>医药魔方</th><th>药智网</th><th>IQVIA</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700">运营主体</td><td>北京华彬立成</td><td>重庆康洲数据</td><td>IQVIA（艾昆纬）</td></tr>
+<tr><td style="font-weight:700">起步时间</td><td>2013年</td><td>2009年</td><td>2016年（前身数十年前）</td></tr>
+<tr><td style="font-weight:700">数据库量</td><td>50+个</td><td>248个（本土最多）</td><td>全球级矩阵</td></tr>
+<tr><td style="font-weight:700">核心定位</td><td>AI驱动创新药/投融资</td><td>国内最全药品全链条</td><td>全球真实世界数据与市场洞察</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">功能模块对比</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>能力维度</th><th>医药魔方</th><th>药智网</th><th>IQVIA</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700">创新药管线</td><td>⭐⭐⭐⭐⭐ 核心强项</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐ 全球最全</td></tr>
+<tr><td style="font-weight:700">投融资/BD</td><td>⭐⭐⭐⭐⭐ 行业领先</td><td>⭐⭐</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td style="font-weight:700">药品审评注册</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐ 本土最强</td><td>⭐⭐⭐</td></tr>
+<tr><td style="font-weight:700">市场销售数据</td><td>⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐ 全球标杆</td></tr>
+<tr><td style="font-weight:700">AI/ML能力</td><td>⭐⭐⭐⭐ AI驱动</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐ 嵌入工作流</td></tr>
+<tr><td style="font-weight:700">交互体验</td><td>⭐⭐⭐⭐⭐ 可视化佳</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">商业模式对比</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>维度</th><th>医药魔方</th><th>药智网</th><th>IQVIA</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700">主要付费模式</td><td>企业订阅年费</td><td>会员制+模块付费</td><td>高额企业订阅+咨询</td></tr>
+<tr><td style="font-weight:700">目标客户</td><td>药企BD/投资机构</td><td>药企研发/注册/市场</td><td>跨国药企/大型CRO</td></tr>
+<tr><td style="font-weight:700">定价特征</td><td>中等门槛</td><td>较低门槛，模块灵活</td><td>极高门槛（百万级/年）</td></tr>
+<tr><td style="font-weight:700">增值服务</td><td>定制分析报告</td><td>数据定制导出</td><td>战略咨询+RWS研究</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">行业洞察</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" class="pros-cons">
+<div class="pros">
+<h4>行业机会</h4>
+<ul>
+<li>本土平台在数据深度上快速追赶国际巨头</li>
+<li>AI正在重塑医药数据产品的交互范式（自然语言查询→智能分析）</li>
+<li>带量采购、医保谈判等政策催生大量数据分析需求</li>
+<li>中小药企的数字化需求远未满足，存在产品下沉空间</li>
+</ul>
+</div>
+<div class="cons">
+<h4>行业挑战</h4>
+<ul>
+<li>医药数据获取壁垒高，源头数据分散且非结构化</li>
+<li>国际巨头（IQVIA、Veeva）生态壁垒深厚</li>
+<li>AI幻觉问题在医药场景容忍度极低</li>
+<li>数据合规与隐私保护要求日益严格</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== 03 认知健康SaaS平台 ==================== -->
+<section class="sec" id="saas">
+<div class="wrap">
+<div class="sec-label">03 / Product Design</div>
+<h2 class="sec-title">认知健康 SaaS 平台</h2>
+<p class="sec-sub">面向体检中心与基层医疗机构的B2B认知健康筛查与管理平台<br>参与产品架构设计、需求优先级排序与路线图规划</p>
+<div class="sec-line"></div>
+
+<div class="card reveal">
+<div class="card-title">产品架构</div>
+<div class="arch">
+<div class="arch-row"><div class="arch-label">应用层</div><div class="arch-tags"><span class="arch-tag">认知自测入口</span><span class="arch-tag">语音答题</span><span class="arch-tag">AI健康咨询</span><span class="arch-tag">个人报告</span><span class="arch-tag">机构后台</span></div></div>
+<div class="arch-row"><div class="arch-label">服务层</div><div class="arch-tags"><span class="arch-tag">筛查引擎</span><span class="arch-tag">风险评估模型</span><span class="arch-tag">MCI咨询智能体</span><span class="arch-tag">认知训练</span><span class="arch-tag">数据导出</span></div></div>
+<div class="arch-row"><div class="arch-label">数据层</div><div class="arch-tags"><span class="arch-tag">用户信息库</span><span class="arch-tag">筛查结果库</span><span class="arch-tag">RAG知识库</span><span class="arch-tag">账户体系</span><span class="arch-tag">操作日志</span></div></div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" class="reveal">
+<div class="card" style="margin-bottom:0">
+<div class="card-title">四级风险分层</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>等级</th><th>AD8</th><th>判定</th><th>建议</th></tr></thead>
+<tbody>
+<tr><td><span style="color:#2E7D64;font-weight:700">低风险</span></td><td>0-1</td><td>正常</td><td>每年复查</td></tr>
+<tr><td><span style="color:#D4A01E;font-weight:700">需关注</span></td><td>2-3</td><td>早期变化</td><td>3-6月复查</td></tr>
+<tr><td><span style="color:#D4783C;font-weight:700">中高危</span></td><td>4-5</td><td>损害可能</td><td>建议就诊</td></tr>
+<tr><td><span style="color:#DC3545;font-weight:700">高风险</span></td><td>6-8</td><td>高度提示</td><td>尽快检查</td></tr>
+</tbody>
+</table></div>
+</div>
+<div class="card" style="margin-bottom:0">
+<div class="card-title">SaaS定价方案</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>版本</th><th>年费</th><th>适用客户</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700">基础版</td><td>1.5万</td><td>小型诊所/社区</td></tr>
+<tr><td style="font-weight:700">专业版</td><td>3万</td><td>中型机构/连锁</td></tr>
+<tr><td style="font-weight:700">企业版</td><td>定制</td><td>大型医院/区域平台</td></tr>
+</tbody>
+</table></div>
+</div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">移动端原型预览</div>
+<p class="card-subtitle">认知健康筛查H5端交互演示——自测入口 → 语音答题 → 结果报告，完整用户流程</p>
+<div class="proto-wrap">
+<div class="proto-header">认知健康筛查 · 移动端原型</div>
+<iframe src="认知健康筛查-移动端原型图-v2.html" title="移动端原型"></iframe>
+</div>
+<a class="btn btn-outline" href="认知健康筛查-移动端原型图-v2.html" target="_blank" style="margin-top:8px">全屏打开原型</a>
+</div>
+
+<div class="card reveal" style="text-align:center">
+<div class="card-title" style="justify-content:center">完整文档下载</div>
+<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+<a class="btn btn-primary" href="PRD-认知健康SaaS平台.html" target="_blank">PRD 产品需求文档</a>
+<a class="btn btn-outline" href="BRD-认知健康SaaS平台.html" target="_blank">BRD 商业需求文档</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== 04 AI智能体实践 ==================== -->
+<section class="sec sec--tint" id="agent">
+<div class="wrap">
+<div class="sec-label">04 / AI Agent</div>
+<h2 class="sec-title">AI 智能体实践</h2>
+<p class="sec-sub">从评测体系设计到Prompt优化的完整AI产品迭代闭环</p>
+<div class="sec-line"></div>
+
+<div class="kpi-row reveal">
+<div class="kpi"><div class="kpi-num">21条</div><div class="kpi-label">评测用例</div></div>
+<div class="kpi"><div class="kpi-num">5类</div><div class="kpi-label">覆盖场景</div></div>
+<div class="kpi"><div class="kpi-num">4维度</div><div class="kpi-label">Badcase归因</div></div>
+<div class="kpi kpi--warm"><div class="kpi-num">V1→V2</div><div class="kpi-label">Prompt迭代</div></div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">评测集设计：21用例 × 5类场景</div>
+<p class="card-subtitle">采用「场景-维度」二维矩阵法，覆盖正常路径→边缘路径→异常路径完整梯度</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>场景类别</th><th>用例数</th><th>占比</th><th>覆盖内容</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700">知识准确性</td><td>7</td><td>30%</td><td>定义、症状、诊断、鉴别、流行病学、预后</td></tr>
+<tr><td style="font-weight:700">干预建议</td><td>6</td><td>25%</td><td>饮食、运动、认知训练、社交、睡眠</td></tr>
+<tr><td style="font-weight:700">情绪沟通</td><td>4</td><td>20%</td><td>共情、焦虑安抚、家属支持、去污名化</td></tr>
+<tr><td style="font-weight:700">边界安全</td><td>5</td><td>15%</td><td>诊断拒绝、药物拒绝、自杀兜底、偏方识别</td></tr>
+<tr><td style="font-weight:700">鲁棒性</td><td>4</td><td>10%</td><td>乱码、超长文本、无关话题、多轮重复</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">Badcase归因方法论</div>
+<p class="card-subtitle">每个Badcase从 Prompt / 知识库 / 模型能力 / 产品设计 四个维度结构化归因</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>#</th><th>问题</th><th>根因关键词</th></tr></thead>
+<tbody>
+<tr><td>1</td><td style="font-weight:700">共情缺失：跳过情绪直接给建议</td><td>Prompt缺「情绪优先」规则</td></tr>
+<tr><td>2</td><td style="font-weight:700">绝对化表述：「MCI无法治愈」过度简化</td><td>知识库缺「部分可逆」平衡表述</td></tr>
+<tr><td>3</td><td style="font-weight:700">浅层回答：仅5字「有一些用处」</td><td>缺回答深度检查+追问机制</td></tr>
+<tr><td>4</td><td style="font-weight:700">兜底僵硬：「我不理解你的问题」</td><td>异常处理策略单一无引导</td></tr>
+<tr><td>5</td><td style="font-weight:700">记忆缺失：连续3次重复问同一问题</td><td>未启用多轮记忆+策略升级</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">Prompt优化：V1.0 → V2.0</div>
+<p class="card-subtitle">核心思路：角色重塑（信息输出者→温暖同伴） + 流程硬约束（①共情→②重构→③方案→④正向） + 反例禁止</p>
+
+<div class="prompt-grid">
+<div class="prompt-box">
+<div class="prompt-box-head prompt-box-head--old">V1.0 Prompt</div>
+<div class="prompt-box-body">
+你是一个专业的MCI健康咨询助手，请基于知识库提供准确的健康建议。回答应保持专业、客观。如果用户的问题你无法回答，请告知用户。
+</div>
+</div>
+<div class="prompt-box">
+<div class="prompt-box-head prompt-box-head--new">V2.0 Prompt</div>
+<div class="prompt-box-body">
+你是一个<strong>温暖而专业</strong>的MCI健康咨询助手。<br><br>
+<strong>【情绪优先】</strong>先识别用户情绪，用1-2句话共情。<br><br>
+<strong>【回答框架】</strong>①共情确认 → ②认知重构（MCI≠终点） → ③家庭支持方案（患者/照护者/家人分层） → ④正向结尾。<br><br>
+<strong>【禁止】</strong>不跳情绪直接给建议；不用冰冷术语堆砌；不说「无能为力」。
+</div>
+</div>
+</div>
+
+<div class="tbl-wrap" style="margin-top:12px"><table>
+<thead><tr><th>评估维度</th><th>V1.0</th><th>V2.0</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700">共情能力</td><td>零共情，直接给建议</td><td>开场共情 + 正常化情绪 + 积极重构</td></tr>
+<tr><td style="font-weight:700">结构化</td><td>模糊单点建议</td><td>角色分层（患者/照护者/家庭），可执行</td></tr>
+<tr><td style="font-weight:700">信任感</td><td>信息输出感强</td><td>建立力量感，开放式结尾留对话空间</td></tr>
+<tr><td style="font-weight:700">合规</td><td>未涉及诊断 ✓</td><td>合规 ✓ + 增加定期随访专业建议</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">MCI健康咨询助手 · 体验原型</div>
+<p class="card-subtitle">基于上述Prompt优化的对话式交互原型</p>
+<div class="proto-wrap">
+<div class="proto-header">MCI健康咨询助手</div>
+<iframe src="MCI健康咨询助手-v2.html"></iframe>
+</div>
+</div>
+
+<div class="card reveal">
+<div class="card-title">健脑小助手 · 智能体大赛作品</div>
+<p class="card-subtitle">全球数智教育创新大赛 AI for Medicine 赛道 · 「厚道泛雅」医学教育智能体大赛参赛作品<br>我作为团队成员负责内容架构与知识库设计</p>
+<div class="proto-wrap">
+<div class="proto-header">健脑小助手 · 老年认知健康评估教学智能体</div>
+<iframe src="健脑小助手.html"></iframe>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== 05 项目实践 ==================== -->
+<section class="sec" id="projects">
+<div class="wrap">
+<div class="sec-label">05 / Projects</div>
+<h2 class="sec-title">项目经历</h2>
+<p class="sec-sub">从课题研究到竞赛实践——在真实项目中建立产品sense</p>
+<div class="sec-line"></div>
+
+<div class="card reveal">
+<div class="card-title">省级大创 · 老年健康养脑学院</div>
+<p style="font-size:0.82rem;color:var(--text3);margin-bottom:12px">负责人（5人团队） · 省级立项</p>
+<p style="color:var(--text2);font-size:0.9rem;line-height:1.9">
+主导文献调研与项目内容架构设计，统筹研究方案设计与执行。负责数据收集、SPSS统计分析及项目报告撰写，推动成果在期刊发表。通过该项目建立了从「发现问题→研究设计→数据分析→结论输出」的完整研究思维。
+</p>
+</div>
+
+<div class="card reveal">
+<div class="card-title">CHIMA 短视频大赛</div>
+<p style="font-size:0.82rem;color:var(--text3);margin-bottom:12px">负责人（5人团队） · 全国第10名（13.6万票）</p>
+<p style="color:var(--text2);font-size:0.9rem;line-height:1.9">
+中国医院协会信息专业委员会（CHIMA）主办的全国医疗信息化科普竞赛。负责内容策划、脚本撰写与成片质量把控——将「AI在认知健康管理中的应用」以通俗易懂的短视频语言传递给大众。作品累计获得13.6万票，从全国参赛作品中入围决赛前十。
+</p>
+</div>
+
+<div class="card reveal">
+<div class="card-title">赣康杯 · 省级竞赛</div>
+<p style="font-size:0.82rem;color:var(--text3);margin-bottom:12px">核心成员（5人团队） · 省级获奖</p>
+<p style="color:var(--text2);font-size:0.9rem;line-height:1.9">
+主导项目路演与专家答辩环节，将团队研究成果向评审委员会进行结构化呈现。在答辩中锻炼了将复杂专业内容转化为清晰商业叙事的能力——这也是产品经理的核心技能。
+</p>
+</div>
+
+<div class="card reveal">
+<div class="card-title">全国大学生数字应用能力大赛 · 计算机设计大赛</div>
+<p style="font-size:0.82rem;color:var(--text3);margin-bottom:12px">国赛优秀奖 · 省二等奖</p>
+<p style="color:var(--text2);font-size:0.9rem;line-height:1.9">
+两项全国性竞赛的获奖经历，覆盖数字应用能力与计算机设计两个方向，体现了跨领域的学习与应用能力。
+</p>
+</div>
+</div>
+</section>
+
+<!-- ==================== 06 证书与荣誉 ==================== -->
+<section class="sec sec--tint" id="honors">
+<div class="wrap">
+<div class="sec-label">06 / Honors</div>
+<h2 class="sec-title">证书与荣誉</h2>
+<p class="sec-sub">专业资质与竞赛成果</p>
+<div class="sec-line"></div>
+
+<div class="cert-grid reveal">
+<div class="cert-item"><span class="cert-icon">📋</span>GCP 药物临床试验规范证书</div>
+<div class="cert-item"><span class="cert-icon">🤖</span>教育部 · AI综合能力提升培训</div>
+<div class="cert-item"><span class="cert-icon">🏆</span>省级大创 · 老年健康养脑学院</div>
+<div class="cert-item"><span class="cert-icon">🎬</span>CHIMA 2026 决赛入围（Top10）</div>
+<div class="cert-item"><span class="cert-icon">🏅</span>赣康杯 · 省级获奖</div>
+<div class="cert-item"><span class="cert-icon">💻</span>数字应用能力大赛 · 国赛优秀奖</div>
+<div class="cert-item"><span class="cert-icon">🖥️</span>计算机设计大赛 · 省二等奖</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== 封底 ==================== -->
+<section class="back-cover">
+<h2>感谢阅读</h2>
+<p>如果我的背景与您的团队方向契合，期待进一步交流<br>我将以临床视角、产品热情和持续学习的态度，为团队扎实贡献</p>
+<div class="cover-line"></div>
+<div class="cover-contact">
+<span>18779007929</span>
+<span>like1002025@163.com</span>
+</div>
+<p style="margin-top:24px;font-size:0.75rem;color:var(--text3)">© 2026 李珂 · AI医疗产品方向实习求职</p>
+</section>
+
+<div class="footer">本作品集为个人求职用途 · 内容来源于真实项目经历</div>
+
+<!-- ==================== SCROLL REVEAL ==================== -->
+<script>
+(function(){
+const obs=new IntersectionObserver((entries)=>{
+entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target)}})
+},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+})();
+</script>
+
+</body>
+</html>
